@@ -1,4 +1,4 @@
-#Design Document
+#Design
 
 ##Statement of Purpose:
 
