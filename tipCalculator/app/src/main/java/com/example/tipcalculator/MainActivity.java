@@ -11,8 +11,13 @@ import static com.example.tipcalculator.R.id.tipPercentageInput;
 public class MainActivity extends AppCompatActivity {
 
     EditText totalBill, tipPercentage, numOfPeople;
-    TextView totalToPay, totalTip, totalPerPerson;
     EditText selectedEditText;
+
+    TextView totalToPay, totalTip, totalPerPerson;
+    
+    public static final int RESET = 10;
+    public static final int DEL = 11;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +80,13 @@ public class MainActivity extends AppCompatActivity {
                 onNumberPadPressed(9);
                 break;
             case (R.id.numPadButton_Reset):
-                onNumberPadPressed(10);
+                onNumberPadPressed(RESET);
                 break;
             case (R.id.numPadButton_0):
                 onNumberPadPressed(0);
                 break;
             case (R.id.numPadButton_Del):
-                onNumberPadPressed(11);
+                onNumberPadPressed(DEL);
                 break;
         }
         ;
@@ -98,12 +103,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         switch (numPressed) {
-            case 10:
+            case RESET:
                 selectedEditText.setText("0");
                 updateTipReport();
                 break;
-            case 11:
-                newNumber = String.format("%d", currentNum / 10); //backspace functionality
+            case DEL:
+                newNumber = String.format("%d", currentNum / 10); //backspace
                 selectedEditText.setText(newNumber);
                 updateTipReport();
                 break;
@@ -128,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
         currentTipPercentage--;
 
         String newTipPercentage = String.format("%d", currentTipPercentage);
-        //TextView tipPercentageInput = (TextView) findViewById (tipPercentageInput);
         tipPercentage.setText(newTipPercentage);
 
         updateTipReport();
@@ -145,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
         currentTipPercentage++;
 
         String newTipPercentage = String.format("%d", currentTipPercentage);
-        //TextView tipPercentageInput = (TextView) findViewById (tipPercentageInput);
         tipPercentage.setText(newTipPercentage);
 
         updateTipReport();
@@ -162,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
         int newNumOfPeople = currentNumberOfPeople - 1;
 
         String newNumberOfPeople = String.format("%d", newNumOfPeople);
-        //TextView numberOfPeopleInput = (TextView) findViewById (R.id.numOfPeopleInput);
         numOfPeople.setText(newNumberOfPeople);
 
         updateTipReport();
@@ -179,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
         int newNumOfPeople = currentNumberOfPeople + 1;
 
         String newNumberOfPeople = String.format("%d", newNumOfPeople);
-        //TextView numberOfPeopleInput = (TextView) findViewById (R.id.numOfPeopleInput);
         numOfPeople.setText(newNumberOfPeople);
 
         updateTipReport();
