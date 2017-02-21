@@ -30,6 +30,7 @@ VR EXPERIENCE LEVEL: NONE
 8. For best text viewing experience a good distance for text to sit at would be 1 unity unit, which is about 1 meter. (may vary from person to person)
 9. Due to pixel density issues it is critical to test text-viewing-experience on the deivce (it is slightly easy to read it on computer screen ).
 10. TESTING ON DEVICE for movements is also very important as it may cause dizzyness during VR-experience.
+11. Scaling your first object in VR is EXTREMELY IMPORTANT!
 
 
 ##Ideas for Future Enhancements
