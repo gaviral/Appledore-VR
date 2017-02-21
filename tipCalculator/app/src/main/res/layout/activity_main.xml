@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+<LinearLayout android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.example.tipcalculator.MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:gravity="center_horizontal"
+        android:text="@string/topLine" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="200dp"
+            android:layout_width="150dp">
+
+            <TextView
+                android:text="@string/totalBill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/totalBillText"
+                android:layout_weight="1.03" />
+
+            <TextView
+                android:text="@string/tipPercent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tipPercentageText"
+                android:layout_width="match_parent"
+                android:layout_weight="1.32" />
+
+            <TextView
+                android:text="@string/splitBill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/splitBillText"
+                android:layout_weight="1.20" />
+
+            <TextView
+                android:text="@string/totalToPay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/totalToPayText" />
+
+            <TextView
+                android:text="@string/totalTip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/totalTipText" />
+
+            <TextView
+                android:text="@string/totalPerPerson"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/totalperPersonText" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="6"
+            android:gravity="center_horizontal">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:text="@string/totalBillDefaultText"
+                    android:ems="10"
+                    android:id="@+id/totalBillEntered"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:onClick="lastEditTextSelected"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+                android:layout_weight="5.50"
+                android:weightSum="1">
+
+                <Button
+                    android:text="@string/minusSign"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/decreaseTipPercentage"
+                    android:onClick="onDecreaseTipPercentageClick"
+                    android:layout_width="40dp" />
+
+                <EditText
+                    android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="@string/tipPercentDefaultText"
+                android:ems="10"
+                android:id="@+id/tipPercentageInput"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_weight="0.54"
+                    android:layout_width="100dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false" />
+
+                <Button
+                    android:text="@string/plusSign"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/increaseTipPercentage"
+                    android:onClick="onIncreaseTipPercentageClick"
+                    android:layout_width="40dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:text="@string/minusSign"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/decreaseNumOfPeople"
+                    android:onClick="onDecreaseNumberOfPeopleClick"
+                    android:layout_width="40dp" />
+
+                <EditText
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:text="@string/numOfPeopleDefaultText"
+                    android:ems="10"
+                    android:id="@+id/numOfPeopleInput"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_width="100dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false" />
+
+                <Button
+                    android:text="@string/plusSign"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/increaseNumOfPeople"
+                    android:onClick="onIncreaseNumberOfPeopleClick"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="@string/totalToPayDefaultText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/totalToPayResult"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="@string/totalTipDefaultText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/totalTipResult"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:text="@string/totalPerPersonDefaultText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/totalPerPersonResult" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:text="@string/numPadText_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numPadButton_1"
+                android:onClick="onNumPadPressed" />
+
+            <Button
+                android:text="@string/numPadText_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numPadButton_2"
+                android:onClick="onNumPadPressed" />
+
+            <Button
+                android:text="@string/numPadText_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numPadButton_3"
+                android:onClick="onNumPadPressed" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:text="@string/numPadText_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numPadButton_4"
+                android:onClick="onNumPadPressed" />
+
+            <Button
+                android:text="@string/numPadText_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numPadButton_5"
+                android:onClick="onNumPadPressed" />
+
+            <Button
+                android:text="@string/numPadText_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numPadButton_6"
+                android:onClick="onNumPadPressed" />
+        </TableRow>
+
+        <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+
+        <Button
+            android:text="@string/numPadText_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numPadButton_7"
+            android:onClick="onNumPadPressed" />
+
+        <Button
+            android:text="@string/numPadText_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numPadButton_8"
+            android:onClick="onNumPadPressed" />
+
+        <Button
+            android:text="@string/numPadText_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numPadButton_9"
+            android:onClick="onNumPadPressed" />
+    </TableRow>
+
+        <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+
+        <Button
+            android:text="@string/numPadText_Reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numPadButton_Reset"
+            android:onClick="onNumPadPressed" />
+
+        <Button
+            android:text="@string/numPadText_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numPadButton_0"
+            android:onClick="onNumPadPressed" />
+
+        <Button
+            android:text="@string/numPadText_Del"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numPadButton_Del"
+            android:onClick="onNumPadPressed" />
+    </TableRow>
+
+    </TableLayout>
+
+
+</LinearLayout>
+</ScrollView>
+</LinearLayout>
