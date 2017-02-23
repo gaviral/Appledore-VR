@@ -37,5 +37,23 @@
 		2. Minimize time spent on debugging, integrating and maximize development time
 
 2. Sticking with mind-palace idea?
-3. Idea name: VR-One
-4. Commit - 1
+	Yes
+3. Target Market?
+	Students and professors
+4. Idea name: VR-One
+5. Commit - 1
+6. Can phone processor handle VR environment?
+	Yes
+7. Role of DE2?
+	Bluetooth Controller
+8. VR experience?
+	Little experience but most stuff is handled by unity
+9. Further ideas:
+	Do castle + GameObject selection on android instead of VR
+	VR-One used for Language Course development
+10. exercises will be pushed to github but in seperate branches called:
+	exercise1
+	exercise2
+	exercise3
+	exercise4
+	

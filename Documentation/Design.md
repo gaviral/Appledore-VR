@@ -35,4 +35,5 @@ VR EXPERIENCE LEVEL: NONE
 
 ##Ideas for Future Enhancements
 
-1. Teachers use VR-One to create interactive course material.
+1. Teachers/Professors use VR-One to create interactive course material.
+2. Possible replacement for castles: Google Indoors or similiar resources.
