@@ -1,12 +1,8 @@
-package com.adam.myplugin;
+package com.vroneinc.vrone;
 
-import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 
-import com.unity3d.player.UnityPlayer;
 import com.unity3d.player.UnityPlayerActivity;
 
 public class GameActivity extends UnityPlayerActivity {

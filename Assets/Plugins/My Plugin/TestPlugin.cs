@@ -19,6 +19,10 @@ public class TestPlugin : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		GetComponent<Text>().text = jo.Call<int>("getNextNumber").ToString();
+		// GetComponent<Text>().text = jo.Call<int>("getNextNumber").ToString();
+		AndroidJavaClass pluginClass = new AndroidJavaClass("com.adam.myplugin.My_Plugin");
+		string updateText = pluginClass.CallStatic<string>("getMessage");
+		Debug.Log(updateText);
+		GetComponent<Text>().text = updateText;
 	}
 }
