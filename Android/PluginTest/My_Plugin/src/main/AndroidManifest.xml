@@ -14,7 +14,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.vroneinc.vrone.GameActivity"></activity>
+        <activity
+            android:name="com.vroneinc.vrone.GameActivity"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>
