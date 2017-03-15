@@ -21,12 +21,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.CancelableCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -34,10 +39,16 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_NONE;
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_NORMAL;
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE;
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
+
 /**
  * This shows how to change the camera position for the map.
  */
-public class CameraDemoActivity extends FragmentActivity {
+public class CameraDemoActivity extends FragmentActivity implements AdapterView.OnItemSelectedListener {
 
     /**
      * The amount by which to scroll the camera. Note that this amount is in raw pixels, not dp
@@ -45,29 +56,26 @@ public class CameraDemoActivity extends FragmentActivity {
      */
     private static final int SCROLL_BY_PX = 100;
 
-    static final CameraPosition VRCONTROLLER =
-            new CameraPosition.Builder().target(new LatLng(-33.87365, 151.20689))
+    static final LatLng VRCONTROLLERGPS = new LatLng(-33.87365, 151.20689);
+
+    static final CameraPosition VRCONTROLLERCAMERA =
+            new CameraPosition.Builder().target(VRCONTROLLERGPS)
                     .zoom(15.5f)
                     .bearing(0)
                     .tilt(25)
                     .build();
 
+    private Marker vrControllerMarker;
     private CameraPosition vrControllerCameraPos;
-
     private GoogleMap mMap;
-
-//    private CheckBox mTrafficCheckbox;
-//    private CheckBox mMyLocationCheckbox;
-//    private CheckBox mBuildingsCheckbox;
+    private CheckBox mTrafficCheckbox;
+    private CheckBox mBuildingsCheckbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_demo);
-        vrControllerCameraPos = VRCONTROLLER;
-
-        /*
-        setContentView(R.layout.layers_demo);
+        vrControllerCameraPos = VRCONTROLLERCAMERA;
 
         Spinner spinner = (Spinner) findViewById(R.id.layers_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -77,9 +85,8 @@ public class CameraDemoActivity extends FragmentActivity {
         spinner.setOnItemSelectedListener(this);
 
         mTrafficCheckbox = (CheckBox) findViewById(R.id.traffic);
-        mMyLocationCheckbox = (CheckBox) findViewById(R.id.my_location);
         mBuildingsCheckbox = (CheckBox) findViewById(R.id.buildings);
-        */
+
         setUpMapIfNeeded();
     }
 
@@ -87,6 +94,11 @@ public class CameraDemoActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        if (mMap != null) {
+            updateTraffic();
+            setMyLocation();
+            updateBuildings();
+        }
     }
 
     private void setUpMapIfNeeded() {
@@ -102,9 +114,14 @@ public class CameraDemoActivity extends FragmentActivity {
     private void setUpMap() {
         // We will provide our own zoom controls.
         mMap.getUiSettings().setZoomControlsEnabled(false);
-
         // Show Analog Stick
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-33.87365, 151.20689), 10));
+
+        //Enable My Location to be shown
+        setMyLocation();
+
+        //Add Analog Stick Marker
+        addMarkersToMap();
     }
 
     /**
@@ -125,6 +142,8 @@ public class CameraDemoActivity extends FragmentActivity {
                 .bearing(0)
                 .tilt(25)
                 .build();
+
+        vrControllerMarker.setPosition(new LatLng(latitude, longitude));
     }
 
     /**
@@ -260,4 +279,79 @@ public class CameraDemoActivity extends FragmentActivity {
     private void changeCamera(CameraUpdate update, CancelableCallback callback) {
         mMap.moveCamera(update);
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        setLayer((String) parent.getItemAtPosition(position));
+    }
+
+    private void setLayer(String layerName) {
+        if (!checkReady()) {
+            return;
+        }
+        if (layerName.equals(getString(R.string.normal))) {
+            mMap.setMapType(MAP_TYPE_NORMAL);
+        } else if (layerName.equals(getString(R.string.hybrid))) {
+            mMap.setMapType(MAP_TYPE_HYBRID);
+        } else if (layerName.equals(getString(R.string.satellite))) {
+            mMap.setMapType(MAP_TYPE_SATELLITE);
+        } else if (layerName.equals(getString(R.string.terrain))) {
+            mMap.setMapType(MAP_TYPE_TERRAIN);
+        } else {
+            Log.i("LDA", "Error setting layer with name " + layerName);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Do nothing.
+    }
+
+    /**
+     * Called when the Traffic checkbox is clicked.
+     */
+    public void onTrafficToggled(View view) {
+        updateTraffic();
+    }
+
+    private void updateTraffic() {
+        if (!checkReady()) {
+            return;
+        }
+        mMap.setTrafficEnabled(mTrafficCheckbox.isChecked());
+    }
+
+    private void setMyLocation() {
+        if (!checkReady()) {
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+    }
+
+    /**
+     * Called when the Buildings checkbox is clicked.
+     */
+    public void onBuildingsToggled(View view) {
+        updateBuildings();
+    }
+
+    private void updateBuildings() {
+        if (!checkReady()) {
+            return;
+        }
+        mMap.setBuildingsEnabled(mBuildingsCheckbox.isChecked());
+    }
+
+    private void addMarkersToMap() {
+
+        // Uses a custom icon with the info window popping out of the center of the icon
+        vrControllerMarker = mMap.addMarker(new MarkerOptions()
+                .position(VRCONTROLLERGPS)
+                .title("VR Controller")
+                .snippet("User ID: 123456")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                .infoWindowAnchor(0.5f, 0.5f));
+    }
+
 }

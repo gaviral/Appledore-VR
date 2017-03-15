@@ -18,17 +18,55 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
+
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <RelativeLayout
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:gravity="center_horizontal"
+        android:layout_width="154dp"
+        android:layout_height="match_parent"
+        android:gravity="left">
+
+      <Spinner
+          android:id="@+id/layers_spinner"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_alignRight="@+id/traffic"
+          android:layout_alignEnd="@+id/traffic" />
+
+      <CheckBox
+          android:id="@+id/buildings"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:onClick="onBuildingsToggled"
+          android:checked="true"
+          android:text="@string/buildings"
+          android:layout_below="@+id/traffic"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true" />
+
+      <CheckBox
+            android:id="@+id/traffic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onTrafficToggled"
+            android:text="@string/traffic"
+          android:layout_below="@+id/layers_spinner"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="right"
       android:layout_weight="1">
+
       <Button
         android:id="@+id/scroll_left"
-        android:layout_width="wrap_content"
+        android:layout_width="55dp"
         android:layout_height="wrap_content"
         android:onClick="onScrollLeft"
         android:layout_alignParentLeft="true"
@@ -36,7 +74,7 @@
         android:text="@string/left_arrow"/>
       <Button
         android:id="@+id/scroll_up"
-        android:layout_width="wrap_content"
+        android:layout_width="55dp"
         android:layout_height="wrap_content"
         android:onClick="onScrollUp"
         android:layout_alignParentTop="true"
@@ -44,7 +82,7 @@
         android:text="@string/up_arrow"/>
       <Button
         android:id="@+id/scroll_down"
-        android:layout_width="wrap_content"
+        android:layout_width="55dp"
         android:layout_height="wrap_content"
         android:onClick="onScrollDown"
         android:layout_below="@id/scroll_up"
@@ -52,13 +90,14 @@
         android:text="@string/down_arrow"/>
       <Button
         android:id="@+id/scroll_right"
-        android:layout_width="wrap_content"
+        android:layout_width="55dp"
         android:layout_height="wrap_content"
         android:onClick="onScrollRight"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/scroll_down"
         android:text="@string/right_arrow"/>
-    </RelativeLayout>
+
+          </RelativeLayout>
 
     <LinearLayout
       android:orientation="vertical"
@@ -88,21 +127,16 @@
         android:layout_height="wrap_content"
         android:onClick="onGoToVrController"
         android:layout_weight="0.5"
-        android:text="Go to Analog Stick"/>
+        android:text="@string/go_to_vr_controller"/>
   </LinearLayout>
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent">
-    <fragment
-      android:id="@+id/map"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      class="com.google.android.gms.maps.SupportMapFragment"/>
 
     <Button
       android:id="@+id/zoom_out"
-      android:layout_width="wrap_content"
-      android:layout_height="58dp"
+      android:layout_width="42dp"
+      android:layout_height="wrap_content"
       android:onClick="onZoomOut"
       android:text="@string/zoom_out"
         android:layout_alignParentBottom="true"
@@ -111,13 +145,22 @@
 
     <Button
         android:id="@+id/zoom_in"
-        android:layout_width="wrap_content"
-        android:layout_height="58dp"
+        android:layout_width="42dp"
+        android:layout_height="wrap_content"
         android:onClick="onZoomIn"
         android:text="@string/zoom_in"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_above="@+id/zoom_out" />
+
+    <fragment
+      android:id="@+id/map"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
   </RelativeLayout>
 

@@ -39,7 +39,6 @@ public final class MainActivity extends Activity {
         setContentView(R.layout.main);
 
         ArrayList<String> myStringArray = new ArrayList<String>();
-
         myStringArray.add("Demo Camera Functions");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myStringArray);
