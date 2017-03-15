@@ -3,22 +3,33 @@
 #include "stdbool.h"
 #include <string.h>
 #include <time.h>
+#include <math.h>
 #include "touchscreen.h"
 #include "uncategorized.h"
 #include "Colours.h"
 #include "bmp.h"
 #include "gps.h"
 #include "map.h"
-#include <math.h>
 #include "screen.h"
+#include "graphics.h"
 #include "bluetooth.h" // for the delay function
 
-struct Buttons screen1[3] ={
-		{"Left", { 100, 240 }, 200, 100, LIME, BLUE, 1 },
-		{"Right", { 500, 240 }, 200, 100, LIME, BLUE, 1 },
-		{"Forward", { 300 , 100 }, 200, 100, LIME, BLUE, 1 }
-		//,{"CURRENT_TIME", { 300, 190 }, 75, 50, LIME, BLUE, 0 }
+struct Buttons screen1[13] = {
+		{"SPRINT 1 DEMO TUTORIAL", { 0, 0 }, 800, 100, YELLOW, CRIMSON, 1 },
+		{"Left", { 100, 300 }, 150, 100, CRIMSON, LIME, 1 },
+		{"Forward", { 250, 300 }, 150, 100, CRIMSON, LIME, 1 },
+		{"Right", { 400, 300 }, 150, 100, CRIMSON, LIME, 1 },
+		{"Reset", { 550, 300 }, 150, 100, CRIMSON, LIME, 1 },
+		{"KEY3", { 100, 240 }, 150, 60, LIME, BLACK, 1 },
+		{"KEY2", { 250, 240 }, 150, 60, LIME, BLACK, 1 },
+		{"KEY1", { 400, 240 }, 150, 60, LIME, BLACK, 1 },
+		{"KEY0", { 550, 240 }, 150, 60, LIME, BLACK, 1 },
+		{"", { 150, 175 }, 50, 50, 252, BLACK, 1 },
+		{"", { 300, 175 }, 50, 50, 252, BLACK, 1 },
+		{"", { 450, 175 }, 50, 50, 252, BLACK, 1 },
+		{"", { 600, 175 }, 50, 50, 252, BLACK, 1 }
 };
+
 
 extern int current_screen_num;
 
@@ -49,7 +60,7 @@ void change_pallette(int pallette_num){
 void clear_screen() { // clear the screen
 	int i;
 	for (i = 0; i < YRES; i++) {
-		HLine(0, XRES - 1, i, WHITE);
+		HLine(0, XRES - 1, i, BLACK);
 	}
 }/*
  * Renders/clears button sent based on render parameter
@@ -65,6 +76,33 @@ void render_button(struct Buttons button, int render) {
 	}
 }
 
+// TODO: remove these after sprint 1
+void render_circle(int i) {
+	switch (i) {
+		case 0:
+			circle_helper(175, 200);
+			break;
+		case 1:
+			circle_helper(325, 200);
+			break;
+		case 2:
+			circle_helper(475, 200);
+			break;
+		case 3:
+			circle_helper(625, 200);
+			break;
+		default:
+			break;
+	}
+}
+
+void circle_helper(int x0, int y0) {
+	int j;
+	for (j = 18; j > 0; j--) {
+		DrawCircle(x0, y0, j, BLACK);
+	}
+}
+
 /*
  * Renders the new screen based on screen_num parameter
  */
@@ -75,6 +113,10 @@ void render_screen(int screen_num, int render) {
 		current_screen_num = 1;
 		for (i = 0; i < (sizeof(screen1) / sizeof(struct Buttons)); i++) {
 			render_button(screen1[i], render);
+		}
+		// TODO: Added the circle stuff here, remove when the time comes
+		for (i = 0; i < 4; i++) {
+			render_circle(i);
 		}
 		break;
 	}

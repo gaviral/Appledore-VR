@@ -8,3 +8,8 @@ void any_button_pressed(Point touch_point);
 void change_button_color(struct Buttons *button, int new_color);
 void controller_init(void);
 void init_buttons(void);
+
+
+// TODO: REMOVE
+void circle_helper(int x0, int y0);
+void render_circle(int i);

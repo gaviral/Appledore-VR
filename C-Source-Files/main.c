@@ -32,7 +32,7 @@ volatile int pushbutton_pressed = NOKEY;
 
 int main() {
 	//change_pallette(DEFAULT_PALLETTE);
-	//gen_palette();
+	gen_palette();
 	init_touch();
 	init_gps();
 	controller_init();

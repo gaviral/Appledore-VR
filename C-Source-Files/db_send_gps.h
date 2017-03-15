@@ -5,7 +5,7 @@
 #define DOFILE_PATCH "dofile('firebaseComm.lua')\r\n"
 #define HTTP_PATCH "http_patch(\"%s\", '%s', \"%d\")\r\n"
 
-#define CONTENT_STR "{\"location\": {\"latitude\": \"%f\", \"longitude\": \"%f\"}}"
+#define CONTENT_STR "{\"location\": {\"latitude\": %f, \"longitude\": %f}}"
 
 // carriage return and new line
 #define CR_NL ((const char *) "\r\n")
