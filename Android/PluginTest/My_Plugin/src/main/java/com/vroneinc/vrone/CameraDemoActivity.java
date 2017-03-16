@@ -97,6 +97,8 @@ public class CameraDemoActivity extends FragmentActivity implements AdapterView.
         mTrafficCheckbox = (CheckBox) findViewById(R.id.traffic);
         mBuildingsCheckbox = (CheckBox) findViewById(R.id.buildings);
 
+        setUpMapIfNeeded();
+
         // Initialize firebase reference
         FirebaseApp.initializeApp(this);
         gpsDBReference = FirebaseDatabase.getInstance().getReference("Users/test_id/Controller/location");
@@ -115,8 +117,6 @@ public class CameraDemoActivity extends FragmentActivity implements AdapterView.
                 Log.w("ControllerGPS", "Failed to read value.", error.toException());
             }
         });
-
-        setUpMapIfNeeded();
     }
 
     @Override
