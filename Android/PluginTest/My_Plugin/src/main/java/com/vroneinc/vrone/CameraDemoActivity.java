@@ -16,6 +16,16 @@
 
 package com.vroneinc.vrone;
 
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,20 +44,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.Toast;
-
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
-import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_NONE;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_NORMAL;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
@@ -108,6 +105,7 @@ public class CameraDemoActivity extends FragmentActivity implements AdapterView.
                 // Update the controller's GPS location whenever we get data
                 GPSCoord coord = dataSnapshot.getValue(GPSCoord.class);
                 changeVRControllerGPS(coord.longitude, coord.latitude);
+                onGoToVrController(null);
                 Log.d("ControllerGPS", "Value is: " + coord);
             }
 
@@ -153,7 +151,7 @@ public class CameraDemoActivity extends FragmentActivity implements AdapterView.
         setMyLocation();
 
         //Add Analog Stick Marker
-        addMarkersToMap();
+       // addMarkersToMap();
     }
 
     /**
@@ -169,6 +167,9 @@ public class CameraDemoActivity extends FragmentActivity implements AdapterView.
     }
 
     public void changeVRControllerGPS(double longitude, double latitude) {
+        if(vrControllerMarker==null){
+            addMarkersToMap();
+        }
         vrControllerCameraPos = new CameraPosition.Builder().target(new LatLng(latitude, longitude))
                 .zoom(15.5f)
                 .bearing(0)
@@ -182,6 +183,7 @@ public class CameraDemoActivity extends FragmentActivity implements AdapterView.
      * Called when the Animate To "Go To Analog Stick" button is clicked.
      */
     public void onGoToVrController(View view) {
+
         if (!checkReady()) {
             return;
         }
