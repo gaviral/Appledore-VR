@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.68">
+
+        <Button
+        android:id="@+id/connectbutton"
+        android:layout_width="214dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="    Bluetooth"
+            android:background="@color/background_material_light"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+            android:layout_marginTop="140dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="43dp"
+            android:layout_height="39dp"
+            app:srcCompat="@drawable/bluetooth"
+            android:id="@+id/imageView2"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_alignTop="@+id/connectbutton"
+            android:layout_alignLeft="@+id/connectbutton"
+            android:layout_alignStart="@+id/connectbutton" />
+
+        <!--button 2-->
+        <Button
+            android:id="@+id/unitybutton"
+            android:layout_width="214dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Start Unity"
+            android:background="@color/background_material_light"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif"
+            android:layout_marginTop="39dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="43dp"
+            android:layout_height="39dp"
+            app:srcCompat="@drawable/memcastle"
+            android:id="@+id/imageView1"
+            android:layout_marginLeft="85dp"
+            android:layout_marginStart="85dp"
+            android:layout_marginTop="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <!--button 3-->
+        <Button
+            android:id="@+id/findbutton"
+            android:layout_width="214dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="     Find Controller"
+            android:background="@color/background_material_light"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif"
+            android:layout_marginTop="32dp"
+            android:layout_below="@+id/connectbutton"
+            android:layout_alignLeft="@+id/connectbutton"
+            android:layout_alignStart="@+id/connectbutton" />
+
+        <ImageView
+            android:layout_width="43dp"
+            android:layout_height="39dp"
+            app:srcCompat="@drawable/controller1600"
+            android:id="@+id/imageView3"
+            android:layout_marginTop="7dp"
+            android:layout_alignTop="@+id/findbutton"
+            android:layout_alignLeft="@+id/imageView2"
+            android:layout_alignStart="@+id/imageView2" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+    </FrameLayout>
+
+
+</LinearLayout>
