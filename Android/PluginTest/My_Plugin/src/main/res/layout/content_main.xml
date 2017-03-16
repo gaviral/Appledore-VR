@@ -25,4 +25,11 @@
         android:layout_height="100dp"
         android:text="Start Unity"
         android:layout_margin="30dp" />
+
+    <Button
+        android:id="@+id/findbutton"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="Find Controller"
+        android:layout_margin="30dp" />
 </LinearLayout>

@@ -13,8 +13,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.adam.myplugin.R;
+import com.vroneinc.vrone.R;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.*;
 
+import java.util.HashMap;
 import java.util.Set;
 
 public class MainActivity extends Activity {
@@ -55,13 +58,11 @@ public class MainActivity extends Activity {
     private String mMacAddress;
     private BluetoothDevice mBluetoothDevice = null;
 
-    private Button mButton;
+    // UI buttons
+    private Button connectButton;
     private Button unityButton;
+    private Button findButton;
 
-    public void startUnityButtonPressed(View v) {
-        Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class MainActivity extends Activity {
 
         context = getApplicationContext();
 
+        // Initialize bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             // Device does not support Bluetooth
@@ -77,25 +79,35 @@ public class MainActivity extends Activity {
             finish();
         }
 
-        mButton = (Button) findViewById(R.id.connectbutton);
-
-        mButton.setOnClickListener(new View.OnClickListener() {
-            String text = "This button is for testing concurrency!";
+        // add listener for bluetooth connect button
+        connectButton = (Button) findViewById(R.id.connectbutton);
+        connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
                 connectDevice(true);
             }
         });
 
+        // add listener for unity start button
         unityButton = (Button) findViewById(R.id.unitybutton);
         unityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //connectDevice(true);
                 startUnityButtonPressed(v);
             }
         });
+
+        // add listener for find controller button
+        findButton = (Button) findViewById(R.id.findbutton);
+        findButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplication(), CameraDemoActivity.class));
+            }
+        });
     }
+
 
     @Override
     public void onStart() {
@@ -107,27 +119,8 @@ public class MainActivity extends Activity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         } else if (mBluetoothListener == null) {
             // Initialize the BluetoothChatService to perform bluetooth connections
+            getPairedDevice();
             mBluetoothListener = new BluetoothListener(this, mHandler);
-        }
-
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-        //BluetoothDevice btDevice = null;
-
-        //if (mBluetoothDevice == null && pairedDevices.size() > 0) {
-        if (pairedDevices.size() > 0) {
-            Log.i("SIZE", Integer.toString(pairedDevices.size()));
-            // There are paired devices. Get the name and address of each paired device.
-            for (BluetoothDevice device : pairedDevices) {
-                String deviceName = device.getName();
-                Log.i("NAME", deviceName);
-                String deviceHardwareAddress = device.getAddress(); // MAC address
-                if (deviceName.equals("Team17")) {
-                    mMacAddress = deviceHardwareAddress;
-                    mConnectedDeviceName = deviceName;
-                    mBluetoothDevice = device;
-                    break;
-                }
-            }
         }
 
     }
@@ -191,6 +184,7 @@ public class MainActivity extends Activity {
                     //if (!readMessage.equals("\r\n"))
                     // TODO: do whatever needs to be done for the command here
 
+                    Log.d("BTCommand", "Message read from bluetooth: " + readMessage);
                     My_Plugin.parseCommand(readMessage);
 
                     Log.i("READ", mConnectedDeviceName + ":  " + readMessage);
@@ -218,19 +212,21 @@ public class MainActivity extends Activity {
             case REQUEST_CONNECT_DEVICE_SECURE:
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
-                    connectDevice(true);
+                    getPairedDevice();
                 }
                 break;
             case REQUEST_CONNECT_DEVICE_INSECURE:
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
-                    connectDevice(false);
+                    getPairedDevice();
                 }
                 break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
-                    // Bluetooth is now enabled, so set up a chat session
+                    // Get the paired device
+                    getPairedDevice();
+                    // Bluetooth is now enabled, so set up the listener
                     mBluetoothListener = new BluetoothListener(this, mHandler);
                 } else {
                     // User did not enable Bluetooth or an error occurred
@@ -240,6 +236,32 @@ public class MainActivity extends Activity {
                     this.finish();
                 }
         }
+    }
+
+    /*
+     * Function to get the paired device, this is for calling after BT is enabled
+     */
+    private void getPairedDevice() {
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        //BluetoothDevice btDevice = null;
+
+        //if (mBluetoothDevice == null && pairedDevices.size() > 0) {
+        if (pairedDevices.size() > 0) {
+            Log.i("SIZE", Integer.toString(pairedDevices.size()));
+            // There are paired devices. Get the name and address of each paired device.
+            for (BluetoothDevice device : pairedDevices) {
+                String deviceName = device.getName();
+                Log.i("NAME", deviceName);
+                String deviceHardwareAddress = device.getAddress(); // MAC address
+                if (deviceName.equals("Team17")) {
+                    mMacAddress = deviceHardwareAddress;
+                    mConnectedDeviceName = deviceName;
+                    mBluetoothDevice = device;
+                    break;
+                }
+            }
+        }
+
     }
 
     /**
@@ -257,4 +279,9 @@ public class MainActivity extends Activity {
         mBluetoothListener.connect(device, secure);
     }
 
+    // when the unity start button is pressed
+    public void startUnityButtonPressed(View v) {
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
 }

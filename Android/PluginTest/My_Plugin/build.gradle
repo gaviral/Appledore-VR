@@ -1,6 +1,15 @@
 apply plugin: 'com.android.library'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('C:/Users/mars/.android/debug.keystore')
+            storePassword 'android'
+        }
+    }
+
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
 
@@ -28,6 +37,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    compile 'com.google.firebase:firebase-database:10.2.0'
+    compile 'com.google.android.gms:play-services-maps:10.2.0'
+    compile 'com.google.android.gms:play-services-location:10.2.0'
+
     testCompile 'junit:junit:4.12'
 }
 
@@ -54,3 +67,5 @@ android.libraryVariants.all { variant ->
         rename(sourceAARName, targetAARName)
     }.group = deployTaskGroup;
 }
+
+apply plugin: 'com.google.gms.google-services'

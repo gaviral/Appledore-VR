@@ -1,6 +1,8 @@
 package com.vroneinc.vrone;
 
 
+import android.util.Log;
+
 public class My_Plugin
 {
     public static final String COMMAND_FORWARD = "F";
@@ -8,14 +10,8 @@ public class My_Plugin
     public static final String COMMAND_RIGHT = "R";
     public static final String COMMAND_LEFT = "L";
 
-    int counter = 0;
     static String message = "Not changed";
     private static char currentBTCommand = 0;
-
-    public My_Plugin() {
-        Thread t = new Thread(new TestThread());
-        t.start();
-    }
 
     public static void parseCommand(String command) {
         if(command.equals(COMMAND_FORWARD)) {
@@ -36,6 +32,7 @@ public class My_Plugin
     }
 
     public static char getBTCommand() {
+        Log.d("BTCommand", "current BT command: " + Character.valueOf(currentBTCommand).toString());
         return currentBTCommand;
     }
 
@@ -45,25 +42,6 @@ public class My_Plugin
 
     public static String getMessage() {
         return message;
-    }
-
-    public int getNextNumber() {
-        counter = ++counter % 300;
-        return counter;
-    }
-
-    public class TestThread implements Runnable {
-
-        @Override
-        public void run() {
-            try {
-                // sleep for 5 seconds, then change the value of the counter
-                Thread.sleep(2000);
-                message = "Changed";
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }
