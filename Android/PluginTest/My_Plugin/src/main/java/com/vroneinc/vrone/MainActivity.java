@@ -184,7 +184,6 @@ public class MainActivity extends Activity {
                     //if (!readMessage.equals("\r\n"))
                     // TODO: do whatever needs to be done for the command here
 
-                    Log.d("BTCommand", "Message read from bluetooth: " + readMessage);
                     My_Plugin.parseCommand(readMessage);
 
                     Log.i("READ", mConnectedDeviceName + ":  " + readMessage);
