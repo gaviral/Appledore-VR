@@ -86,7 +86,9 @@ int http_patch_check(char *user_id, int *started) {
 	else {
 		// if TIME_INTERVAL_SEC seconds have passed, patch to database
 		get_gps_data(cur_gps);
-		http_patch(user_id, cur_gps->latitude, cur_gps->longitude);
+		// check for a signal, if there isn't any, don't send data
+		if (cur_gps->latitude != 0 && cur_gps->longitude != 0)
+			http_patch(user_id, cur_gps->latitude, cur_gps->longitude);
 		*started = 0;
 		return 1;
 	}

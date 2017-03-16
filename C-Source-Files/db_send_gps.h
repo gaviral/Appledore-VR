@@ -20,6 +20,7 @@
 #define MAX_CONTENT_LEN 100
 
 // This is for checking the time intervals
+// 85 is the maximum seconds the timer can time
 #define TIME_INTERVAL_SEC ((float) 60)
 
 

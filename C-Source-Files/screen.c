@@ -24,10 +24,10 @@ struct Buttons screen1[13] = {
 		{"KEY2", { 250, 240 }, 150, 60, LIME, BLACK, 1 },
 		{"KEY1", { 400, 240 }, 150, 60, LIME, BLACK, 1 },
 		{"KEY0", { 550, 240 }, 150, 60, LIME, BLACK, 1 },
-		{"", { 150, 175 }, 50, 50, 252, BLACK, 1 },
-		{"", { 300, 175 }, 50, 50, 252, BLACK, 1 },
-		{"", { 450, 175 }, 50, 50, 252, BLACK, 1 },
-		{"", { 600, 175 }, 50, 50, 252, BLACK, 1 }
+		{"", { 150, 175 }, 50, 50, 164, BLACK, 1 },
+		{"", { 300, 175 }, 50, 50, 164, BLACK, 1 },
+		{"", { 450, 175 }, 50, 50, 164, BLACK, 1 },
+		{"", { 600, 175 }, 50, 50, 164, BLACK, 1 }
 };
 
 
@@ -60,7 +60,7 @@ void change_pallette(int pallette_num){
 void clear_screen() { // clear the screen
 	int i;
 	for (i = 0; i < YRES; i++) {
-		HLine(0, XRES - 1, i, BLACK);
+		HLine(0, XRES - 1, i, WHITE);
 	}
 }/*
  * Renders/clears button sent based on render parameter
