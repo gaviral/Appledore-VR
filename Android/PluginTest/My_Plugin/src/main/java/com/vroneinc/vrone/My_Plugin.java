@@ -1,6 +1,5 @@
 package com.vroneinc.vrone;
 
-
 import android.util.Log;
 
 public class My_Plugin
@@ -10,8 +9,9 @@ public class My_Plugin
     public static final String COMMAND_RIGHT = "R";
     public static final String COMMAND_LEFT = "L";
 
+    int counter = 0;
     static String message = "Not changed";
-    private static char currentBTCommand = 0;
+    volatile private static char currentBTCommand = 'N';
 
     public static void parseCommand(String command) {
         if(command.equals(COMMAND_FORWARD)) {
@@ -32,7 +32,7 @@ public class My_Plugin
     }
 
     public static char getBTCommand() {
-        Log.d("BTCommand", "current BT command: " + Character.valueOf(currentBTCommand).toString());
+        Log.d("BTCommand","Command is: " + currentBTCommand);
         return currentBTCommand;
     }
 

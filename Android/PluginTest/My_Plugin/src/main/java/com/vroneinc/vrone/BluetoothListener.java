@@ -510,7 +510,20 @@ public class BluetoothListener {
 
         public void cancel() {
             try {
+                mmInStream.close();
+                //mmInStream = null;
+            } catch (IOException e) {
+                Log.e(TAG, "close() of input stream failed", e);
+            }
+            try {
+                mmOutStream.close();
+                //mmOutStream = null;
+            } catch (IOException e) {
+                Log.e(TAG, "close() of output stream failed", e);
+            }
+            try {
                 mmSocket.close();
+                //mmSocket = null;
             } catch (IOException e) {
                 Log.e(TAG, "close() of connect socket failed", e);
             }

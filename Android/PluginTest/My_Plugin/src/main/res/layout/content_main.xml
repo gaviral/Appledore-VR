@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     android:id="@+id/content_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,24 +13,40 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vroneinc.vrone.MainActivity">
 
+    <!-- button 1-->
     <Button
         android:id="@+id/connectbutton"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="Connect Bluetooth"
-        android:layout_margin="30dp" />
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:drawableStart="@drawable/bluetooth"
+        android:fontFamily="sans-serif"
+        android:padding="16dp"
+        android:text="Bluetooth"
+        android:textSize="25sp" />
 
+    <!--button 2-->
     <Button
         android:id="@+id/unitybutton"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/memcastle"
+        android:layout_marginTop="39dp"
+        android:fontFamily="sans-serif"
+        android:padding="16dp"
         android:text="Start Unity"
-        android:layout_margin="30dp" />
+        android:textSize="25sp" />
 
+    <!--button 3-->
     <Button
         android:id="@+id/findbutton"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="Find Controller"
-        android:layout_margin="30dp" />
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/controller1600"
+        android:layout_marginTop="32dp"
+        android:fontFamily="sans-serif"
+        android:padding="16dp"
+        android:text="Controller Locator"
+        android:textSize="25sp" />
+
 </LinearLayout>

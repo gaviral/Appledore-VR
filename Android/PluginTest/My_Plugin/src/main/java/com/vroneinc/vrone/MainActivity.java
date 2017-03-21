@@ -140,13 +140,13 @@ public class MainActivity extends Activity {
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (mBluetoothListener != null) {
+        /*if (mBluetoothListener != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (mBluetoothListener.getState() == BluetoothListener.STATE_NONE) {
                 // Start the Bluetooth chat services
                 mBluetoothListener.start();
             }
-        }
+        }*/
     }
 
     /**
@@ -184,7 +184,6 @@ public class MainActivity extends Activity {
                     //if (!readMessage.equals("\r\n"))
                     // TODO: do whatever needs to be done for the command here
 
-                    Log.d("BTCommand", "Message read from bluetooth: " + readMessage);
                     My_Plugin.parseCommand(readMessage);
 
                     Log.i("READ", mConnectedDeviceName + ":  " + readMessage);

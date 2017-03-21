@@ -3,7 +3,7 @@
     package="com.vroneinc.vrone">
 
     <uses-sdk
-        android:minSdkVersion="19"
+        android:minSdkVersion="21"
         android:targetSdkVersion="23"/>
 
     <permission
@@ -34,18 +34,18 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name="com.vroneinc.vrone.MainActivity">
+        <activity android:name="com.vroneinc.vrone.MainActivity"
+            android:theme="@android:style/Theme.Material.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.vroneinc.vrone.GameActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"/>
         <activity
-            android:name="com.vroneinc.vrone.CameraDemoActivity"></activity>
+            android:name="com.vroneinc.vrone.CameraDemoActivity"/>
     </application>
 
 </manifest>

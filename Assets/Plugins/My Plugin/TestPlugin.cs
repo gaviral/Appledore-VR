@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TestPlugin : MonoBehaviour {
 
-	AndroidJavaObject jo;
+	//AndroidJavaObject jo;
 
 	// Use this for initialization
 	void Start () {
@@ -14,7 +14,7 @@ public class TestPlugin : MonoBehaviour {
 		Debug.Log(updateText);
 		GetComponent<Text>().text = updateText;
 
-		jo = new AndroidJavaObject ("com.adam.myplugin.My_Plugin");
+		//jo = new AndroidJavaObject ("com.adam.myplugin.My_Plugin");
 	}
 	
 	// Update is called once per frame

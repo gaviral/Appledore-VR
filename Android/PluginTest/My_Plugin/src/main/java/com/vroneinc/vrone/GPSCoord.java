@@ -5,7 +5,7 @@ public class GPSCoord {
     public Double longitude;
 
     public GPSCoord() {
-
+        // Empty constructor for the firebase sdk to use
     }
 
     public GPSCoord(Double latitude, Double longitude) {
