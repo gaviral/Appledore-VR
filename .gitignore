@@ -22,6 +22,10 @@ ExportedObj/
 # Unity3D generated meta files
 *.pidb.meta
 
+# Added March 21st
+*.meta
+GvrIgnoreManifestMergeCheck.txt
+
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
