@@ -30,6 +30,8 @@ ExportedObj/
 *.pidb
 *.booproj
 *.svd
+*.meta
+*.bak
 
 
 # Unity3D generated meta files
@@ -44,3 +46,4 @@ sysinfo.txt
 
 Assets/Plugins/My Plugin/My Plugin Android.aar.orig
 Assets/Plugins/My Plugin/My Plugin Android.aar.orig.meta
+Assets/Plugins/My Plugin/My Plugin Android.aar
