@@ -13,11 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.vroneinc.vrone.R;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.*;
-
-import java.util.HashMap;
 import java.util.Set;
 
 public class MainActivity extends Activity {
@@ -61,6 +56,7 @@ public class MainActivity extends Activity {
     // UI buttons
     private Button connectButton;
     private Button unityButton;
+    private Button forumButton;
     private Button findButton;
 
 
@@ -95,6 +91,16 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 //connectDevice(true);
                 startUnityButtonPressed(v);
+            }
+        });
+
+        // add listener for unity forum button
+        forumButton = (Button) findViewById(R.id.forumbutton);
+        forumButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //connectDevice(true);
+                startForumButtonPressed(v);
             }
         });
 
@@ -281,6 +287,12 @@ public class MainActivity extends Activity {
     // when the unity start button is pressed
     public void startUnityButtonPressed(View v) {
         Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
+
+    // when the forum start button is pressed
+    public void startForumButtonPressed(View v) {
+        Intent intent = new Intent(this, ForumActivity.class);
         startActivity(intent);
     }
 }
