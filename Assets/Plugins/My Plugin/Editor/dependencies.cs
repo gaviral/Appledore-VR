@@ -104,6 +104,29 @@ public class SampleDependencies : AssetPostprocessor {
 		svcSupport, "DependOn",
 			new object[] { "com.google.firebase", "firebase-database", "LATEST" },
 		namedArgs: new Dictionary<string, object>() {
+			{"packageIds", new string[] { "extra-google-m2repository" } }
+		});
+
+	Google.VersionHandler.InvokeInstanceMethod(
+		svcSupport, "DependOn",
+		new object[] { "com.google.firebase", "firebase-auth", "LATEST" },
+		namedArgs: new Dictionary<string, object>() {
+			{"packageIds", new string[] { "extra-google-m2repository" } }
+		});
+		
+		
+	/*Google.VersionHandler.InvokeInstanceMethod(
+		svcSupport, "DependOn",
+		new object[] { "com.google.android.gms", "play-services", "LATEST" },
+		namedArgs: new Dictionary<string, object>() {
+			{"packageIds", new string[] { "extra-google-m2repository" } }
+		});*/
+
+
+	Google.VersionHandler.InvokeInstanceMethod(
+		svcSupport, "DependOn",
+		new object[] { "com.google.android.gms", "play-services-auth", "LATEST" },
+		namedArgs: new Dictionary<string, object>() {
 			{"packageIds", new string[] { "extra-android-m2repository" } }
 		});
 		
@@ -120,6 +143,7 @@ public class SampleDependencies : AssetPostprocessor {
 		namedArgs: new Dictionary<string, object>() {
 			{"packageIds", new string[] { "extra-android-m2repository" } }
 		});
+		
   }
 
   /// <summary>

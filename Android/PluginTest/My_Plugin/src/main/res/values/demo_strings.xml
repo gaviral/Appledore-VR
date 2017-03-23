@@ -48,4 +48,6 @@
   <string name="wait_for_map_load">Wait for Map Load</string>
   <string name="zoom_in">+</string>
   <string name="zoom_out">-</string>
+  <string name="no_internet_title">No Internet Connection</string>
+  <string name="no_internet_message">VR-One requires a stable internet connection for signing in</string>
 </resources>

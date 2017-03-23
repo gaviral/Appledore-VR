@@ -3,30 +3,35 @@ apply plugin: 'com.android.library'
 android {
     signingConfigs {
         config {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storeFile file('C:/Users/mars/.android/debug.keystore')
-            storePassword 'android'
+            keyAlias 'VROneKey'
+            keyPassword 'riodejaneiro'
+            storeFile file('C:/Users/Emre/Documents/3rd_YEAR/CPEN391/VR-One/Android/PluginTest/My_Plugin/android.jks')
+            // C:/Users/Emre/Documents/3rd_YEAR/CPEN391/VR-One/Android/PluginTest/My_Plugin/android.jks
+            storePassword 'WeAre1'
         }
     }
-
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
-
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-
+        //multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+    productFlavors {
     }
 }
 
@@ -36,11 +41,14 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-    compile 'com.google.firebase:firebase-database:10.2.0'
-    compile 'com.google.android.gms:play-services-maps:10.2.0'
-    compile 'com.google.android.gms:play-services-location:10.2.0'
-
+    compile 'com.google.firebase:firebase-core:10.2.1'
+    compile 'com.google.firebase:firebase-database:10.2.1'
+    compile 'com.google.firebase:firebase-auth:10.2.1'
+    compile 'com.google.android.gms:play-services-auth:10.2.1'
+    compile 'com.google.android.gms:play-services-maps:10.2.1'
+    compile 'com.google.android.gms:play-services-location:10.2.1'
+    //compile 'com.android.support:appcompat-v7:23.4.0'
+    //compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
 }
 
