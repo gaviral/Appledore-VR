@@ -6,18 +6,14 @@ package com.vroneinc.vrone;
 
 
         import android.app.Activity;
-        import android.content.Context;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.ArrayAdapter;
-        import android.widget.ImageView;
-        import android.widget.TextView;
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-        import com.bumptech.glide.Glide;
-
-        import java.util.List;
-
-        import static com.vroneinc.vrone.R.id.photoImageView;
+import java.util.List;
 
 public class MessageAdapter extends ArrayAdapter<ForumMessage> {
     public MessageAdapter(Context context, int resource, List<ForumMessage> objects) {
@@ -40,9 +36,9 @@ public class MessageAdapter extends ArrayAdapter<ForumMessage> {
         if (isPhoto) {
             messageTextView.setVisibility(View.GONE);
             photoImageView.setVisibility(View.VISIBLE);
-            Glide.with(photoImageView.getContext())
-                    .load(message.getPhotoUrl())
-                    .into(photoImageView);
+            //Glide.with(photoImageView.getContext())
+                //    .load(message.getPhotoUrl())
+             //       .into(photoImageView);
         } else {
             messageTextView.setVisibility(View.VISIBLE);
             photoImageView.setVisibility(View.GONE);

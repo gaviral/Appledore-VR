@@ -30,7 +30,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,6 @@ public class ForumActivity extends Activity {
     private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private FirebaseStorage mFirebaseStorage;
   //  private StorageReference mChatPhotosStorageReference;
 
 
@@ -159,7 +157,7 @@ public class ForumActivity extends Activity {
                 // Check if the user is logged in or not
                 // if they are not logged in -> show login screen
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-/*
+
                 if(user != null){
                     // user is signed in
 
@@ -170,15 +168,15 @@ public class ForumActivity extends Activity {
 
                     // Helper Method
                     onSignedOutCleanUp();
-                    startActivityForResult(
+                  /*  startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
                                     .setIsSmartLockEnabled(false) // disable automatically save the user credentials and try to log them in
                                     //.setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                     //        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
                                     .build(),
-                            RC_SIGN_IN);
-                }*/
+                            RC_SIGN_IN);*/
+                }
             }
         };
     }
