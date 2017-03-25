@@ -24,7 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:allowBackup="true"
-        android:label="VR-One"
+        android:label="My Plugin"
         android:supportsRtl="true">
 
         <meta-data android:name="com.google.android.maps.v2.API_KEY"
@@ -45,11 +45,7 @@
             android:name="com.vroneinc.vrone.GameActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name="com.vroneinc.vrone.ForumActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name="com.vroneinc.vrone.CameraDemoActivity"/>
-
     </application>
 
 </manifest>
