@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "620672971561-bd9624fghh3drunmhjh9ekeji247pf7s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "0e71ca46d0e454f25f60dc10a80ead6362d17c9b"
+          }
+        },
+        {
           "client_id": "620672971561-bl5mq25b91nntd7hk2n9ru2kpa7st1a5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
