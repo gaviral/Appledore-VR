@@ -9,7 +9,7 @@ public class ObjectSpawner : MonoBehaviour
     public bool placeMnemonicMode;
     Vector3 mnemonicPositionVector;
 
-    private Camera cam;
+    public Camera cam;
     private Vector3 positionHit;
 
     bool wasTouching = false;
@@ -17,9 +17,9 @@ public class ObjectSpawner : MonoBehaviour
 
     void Start(){
         placeMnemonicMode = true;
-        cam = GetComponent< Camera > ();
+     //cam = GetComponent< Camera > ();
     }
-
+   
     public Vector3 getMnemonicPosition()
     {
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
@@ -44,11 +44,12 @@ public class ObjectSpawner : MonoBehaviour
         Vector3 forward = InputTracking.GetLocalRotation(VRNode.CenterEye) * cam.transform.forward;
         Vector3 spawnPos = cam.transform.position + forward * 2;
         GameObject.Instantiate(mnemonic, spawnPos, Quaternion.identity);
-        // GameObject.Instantiate(mnemonic, getMnemonicPosition(), Quaternion.identity);
+      //GameObject.Instantiate(mnemonic, new Vector3(-186.66f, 23.17f, -184.17f), Quaternion.identity);
+      //print("Called place Mnenomic");
 
-    }
-    
-    public void Update(){
+   }
+
+   public void Update(){
         if (Input.touchCount > 0)
         {
             if (!wasTouching)
