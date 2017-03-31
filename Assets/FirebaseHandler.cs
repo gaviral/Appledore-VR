@@ -120,10 +120,9 @@ public class FirebaseHandler : MonoBehaviour
             {
                foreach (DataSnapshot childSnapshot in snapshot.Children)   
                {
-                  string temp = childSnapshot.Child("typeId").Value.ToString();
-                  int typeId = int.Parse(temp);
+                  string typeName = childSnapshot.Child("typeName").Value.ToString();
 
-                  temp = childSnapshot.Child("uid").Value.ToString();
+                  string temp = childSnapshot.Child("uid").Value.ToString();
                   int uid = int.Parse(temp);
 
                   temp = childSnapshot.Child("position").Child("x").Value.ToString();
@@ -132,21 +131,19 @@ public class FirebaseHandler : MonoBehaviour
                   float y = float.Parse(temp);
                   temp = childSnapshot.Child("position").Child("z").Value.ToString();
                   float z = float.Parse(temp);
-                  Debug.Log("GETTING FIREBASE VALUES: typeid: " + typeId + " uid: " + uid + " position x: " + x + " y: " + y + " z: " + z);
+                  Debug.Log("GETTING FIREBASE VALUES: typeName: " + typeName + " uid: " + uid + " position x: " + x + " y: " + y + " z: " + z);
                   Vector3 position = new Vector3(x, y, z);
 
-                  temp = childSnapshot.Child("rotation").Child("w").Value.ToString();
-                  float w = float.Parse(temp);
                   temp = childSnapshot.Child("rotation").Child("x").Value.ToString();
                   x = float.Parse(temp);
                   temp = childSnapshot.Child("rotation").Child("y").Value.ToString();
                   y = float.Parse(temp);
                   temp = childSnapshot.Child("rotation").Child("z").Value.ToString();
                   z = float.Parse(temp);
-                  Debug.Log("GETTING FIREBASE VALUES position: w " + w + " x: " + x + " y: " + y + " z: " + z);
+                  Debug.Log("GETTING FIREBASE VALUES position:" + " x: " + x + " y: " + y + " z: " + z);
 
-                  Quaternion rotation = new Quaternion(x, y, w, z);
-                  spawner.loadMnemonic(typeId, uid, position, rotation);
+                  Vector3 rotation = new Vector3(x, y, z);
+                  spawner.loadMnemonic(typeName, uid, position, rotation);
                }
             }
          }

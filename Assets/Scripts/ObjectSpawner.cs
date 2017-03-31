@@ -3,15 +3,18 @@ using System.Collections;
 using UnityEngine.VR;
 using System.IO;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class ObjectSpawner : MonoBehaviour
 {
+   public List<string> gameObjectsNamesList;
    public List<GameObject> gameObjectsList;    //populate list inside of Inspector
    public bool placeMnemonicMode;
    public Camera cam;
 
-   private Dictionary<int, GameObject> mnemonicDict; 
-   private int menuSelectedID;
+   //private Dictionary<int, GameObject> mnemonicDict;
+   private Dictionary<string, GameObject> mnemonicDict;
+   private string menuSelectedTypeName;
    private List<UniqueGameObject> spawnedObjects;
    private int uidTracker = 0;
    bool wasTouching = false;
@@ -20,31 +23,70 @@ public class ObjectSpawner : MonoBehaviour
    {
       private GameObject gameObject;
       public int uid;
-      public int typeId;
+      public string typeName;
       public Vector3 position;
-      public Quaternion rotation;
+      public Vector3 rotation;
 
-      public UniqueGameObject(GameObject gameObject, int uid, int typeId)
+      public UniqueGameObject(GameObject gameObject, int uid, string typeName)
       {
          this.gameObject = gameObject;
          this.uid = uid;
-         this.typeId = typeId;
+         this.typeName = typeName;
          this.position = this.gameObject.transform.position;
-         this.rotation = this.gameObject.transform.rotation;
+         this.rotation = this.gameObject.transform.rotation.eulerAngles;
       }
    }
 
     void Start(){
       placeMnemonicMode = true;
-      mnemonicDict = new Dictionary<int, GameObject>();
+      mnemonicDict = new Dictionary<string, GameObject>();
       spawnedObjects = new List<UniqueGameObject>();
       //cam = GetComponent< Camera > ();
+      GameObject[] objectsList = gameObjectsList.ToArray();
+      string[] names = gameObjectsNamesList.ToArray();
+
+      for(int i = 0; i < objectsList.Length; i++)
+      {
+         if (!mnemonicDict.ContainsKey(names[i])) {
+            mnemonicDict.Add(names[i], objectsList[i]);
+         } else {
+            Debug.Log("Cannot add prefab to GameObject dictionary - key already exists");
+            // can modify to add number to make name unique
+         }
+      }
+
+      searchMnemonics(" sPiDer/  ");
+/*
       int i = 0;
       foreach (GameObject cur in gameObjectsList)
       {
          mnemonicDict.Add(i, cur);
          i++;
+      }*/
+   }
+
+   public List<string> searchMnemonics(string search)
+   {
+      Debug.Log("Search Word: " + search);
+      search = search.Trim();
+      Regex rgx = new Regex("[^a-zA-Z0-9 ]");
+      search = rgx.Replace(search, "");
+      search = search.ToLower();
+
+      Debug.Log("Search Word After removing whitespaces: " + search);
+      List<string> list = new List<string>();
+
+      foreach (string key in mnemonicDict.Keys)
+      {
+         string temp = key.ToLower();
+         if (temp.Contains(search))
+         {
+            Debug.Log("Key added: " + key);
+            list.Add(key);
+         }
       }
+      Debug.Log("List size: " + list.Count);
+      return list;
    }
    
     public Vector3 getMnemonicPosition()
@@ -67,21 +109,21 @@ public class ObjectSpawner : MonoBehaviour
         return mnemonicPositionVector;
     }
 
-   public UniqueGameObject placeMnemonic(int typeId)
+   public UniqueGameObject placeMnemonic(string typeName)
    {
       Vector3 forward = InputTracking.GetLocalRotation(VRNode.CenterEye) * cam.transform.forward;
       Vector3 spawnPos = cam.transform.position + forward * 2;
       UniqueGameObject uniqueSpawn = null;
       GameObject mnemonic = new GameObject();
-      bool result = mnemonicDict.TryGetValue(typeId, out mnemonic);
+      bool result = mnemonicDict.TryGetValue(typeName, out mnemonic);
       if (!result)
       {
-         Debug.Log("Couldn't find mnemonic object of typeid: " + typeId);
+         Debug.Log("Couldn't find mnemonic object of typename: " + typeName);
       }
       else
       {
          GameObject spawn = GameObject.Instantiate(mnemonic, spawnPos, Quaternion.identity);
-         uniqueSpawn = new UniqueGameObject(spawn, ++uidTracker, typeId);
+         uniqueSpawn = new UniqueGameObject(spawn, ++uidTracker, typeName);
          spawnedObjects.Add(uniqueSpawn);
          FirebaseHandler database = GetComponent<FirebaseHandler>();
          database.writeUniqueGameObject(uniqueSpawn);
@@ -95,19 +137,19 @@ public class ObjectSpawner : MonoBehaviour
       database.loadDatabaseUniqueGameObjects();
    }
 
-   public UniqueGameObject loadMnemonic(int typeId, int uid, Vector3 position, Quaternion rotation)
+   public UniqueGameObject loadMnemonic(string typeName, int uid, Vector3 position, Vector3 rotation)
    {
       UniqueGameObject uniqueSpawn = null;
       GameObject mnemonic = new GameObject();
-      bool result = mnemonicDict.TryGetValue(typeId, out mnemonic);
+      bool result = mnemonicDict.TryGetValue(typeName, out mnemonic);
       if (!result)
       {
-         Debug.Log("Couldn't find mnemonic object of typeid: " + typeId);
+         Debug.Log("Couldn't find mnemonic object of typeid: " + typeName);
       }
       else
       {
-         GameObject spawn = GameObject.Instantiate(mnemonic, position, rotation);
-         uniqueSpawn = new UniqueGameObject(spawn, uid, typeId);
+         GameObject spawn = GameObject.Instantiate(mnemonic, position, Quaternion.Euler(rotation));
+         uniqueSpawn = new UniqueGameObject(spawn, uid, typeName);
          spawnedObjects.Add(uniqueSpawn);
          if (uid > uidTracker)
          {
@@ -121,14 +163,14 @@ public class ObjectSpawner : MonoBehaviour
    public void placeMaidOnClick()
    {
       //set global variable
-      placeMnemonic(0);
+      placeMnemonic("spider");
    }
 
    //Code to connect button to placing mnemonic
    public void placeSpiderOnClick()
    {
       //set global variable
-      placeMnemonic(1);
+      placeMnemonic("maid");
    }
 
    public void Update(){
@@ -137,7 +179,7 @@ public class ObjectSpawner : MonoBehaviour
             if (!wasTouching)
             {
                 Debug.Log("Touched");
-                placeMnemonic(menuSelectedID);
+                placeMnemonic(menuSelectedTypeName);
                 wasTouching = true;
             }
         }
@@ -151,7 +193,7 @@ public class ObjectSpawner : MonoBehaviour
 
             if (placeMnemonicMode)
             {
-                placeMnemonic(menuSelectedID);
+                placeMnemonic(menuSelectedTypeName);
             }
             //placeMnemonicMode = false; //todo: (hardcoded)
         }
