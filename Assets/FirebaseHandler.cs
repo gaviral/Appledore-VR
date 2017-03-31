@@ -10,12 +10,7 @@ using UnityEngine.UI;
 
 public class FirebaseHandler : MonoBehaviour
 {
-
-   // ArrayList items;
-
    private string logText = "";
-
-
    const int kMaxLogSize = 16382;
    DependencyStatus dependencyStatus = DependencyStatus.UnavailableOther;
 
@@ -24,6 +19,8 @@ public class FirebaseHandler : MonoBehaviour
    // add them if possible.
    void Start()
    {
+     // ObjectSpawner spawner = GetComponent<ObjectSpawner>();
+
       dependencyStatus = FirebaseApp.CheckDependencies();
       if (dependencyStatus != DependencyStatus.Available)
       {
@@ -44,8 +41,7 @@ public class FirebaseHandler : MonoBehaviour
       {
          InitializeFirebase();
       }
-
-      writeNewItem("itemidstart2342342", "itemposstart3214234");
+      loadDatabaseUniqueGameObjects();
    }
 
    public class Item
@@ -70,8 +66,6 @@ public class FirebaseHandler : MonoBehaviour
       FirebaseApp app = FirebaseApp.DefaultInstance;
       app.SetEditorDatabaseUrl("https://vr-one-4e3bb.firebaseio.com/");
       if (app.Options.DatabaseUrl != null) app.SetEditorDatabaseUrl(app.Options.DatabaseUrl);
-
-      //items = new ArrayList();
    }
 
    // Exit if escape (or back, on mobile) is pressed.
@@ -96,21 +90,66 @@ public class FirebaseHandler : MonoBehaviour
       }
    }
 
-   private void writeNewItem(string itemId, string pos)
+   public void writeUniqueGameObject(ObjectSpawner.UniqueGameObject gameObject)
    {
-      Item item = new Item(itemId, pos);
-      string json = JsonUtility.ToJson(item);
+      string json = JsonUtility.ToJson(gameObject);
 
       DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-      reference.Child("users").Child(itemId).SetRawJsonValueAsync(json);
+      reference.Child("palace").Child(gameObject.uid.ToString()).SetRawJsonValueAsync(json);
    }
 
-   public void writeNewItemOnClick()
+   public void updateUniqueGameObject()
    {
-      Item item = new Item("itemidonclick23234", "itemposonclick23423");
-      string json = JsonUtility.ToJson(item);
+      //todo once changing object position added
+   }
 
-      DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-      reference.Child("items").Child("itemidonclick23234").SetRawJsonValueAsync(json);
+   public void loadDatabaseUniqueGameObjects()
+   {
+      ObjectSpawner spawner = GetComponent<ObjectSpawner>();
+
+      FirebaseDatabase.DefaultInstance.GetReference("palace").GetValueAsync().ContinueWith(task =>
+      {
+         if (task.IsFaulted)
+         {
+            Debug.Log("Fault getting game state from Firebase");
+         }
+         else if (task.IsCompleted)
+         {
+            DataSnapshot snapshot = task.Result;
+            if (snapshot != null && snapshot.ChildrenCount > 0)
+            {
+               foreach (DataSnapshot childSnapshot in snapshot.Children)   
+               {
+                  string temp = childSnapshot.Child("typeId").Value.ToString();
+                  int typeId = int.Parse(temp);
+
+                  temp = childSnapshot.Child("uid").Value.ToString();
+                  int uid = int.Parse(temp);
+
+                  temp = childSnapshot.Child("position").Child("x").Value.ToString();
+                  float x = float.Parse(temp);
+                  temp = childSnapshot.Child("position").Child("y").Value.ToString();
+                  float y = float.Parse(temp);
+                  temp = childSnapshot.Child("position").Child("z").Value.ToString();
+                  float z = float.Parse(temp);
+                  Debug.Log("GETTING FIREBASE VALUES: typeid: " + typeId + " uid: " + uid + " position x: " + x + " y: " + y + " z: " + z);
+                  Vector3 position = new Vector3(x, y, z);
+
+                  temp = childSnapshot.Child("rotation").Child("w").Value.ToString();
+                  float w = float.Parse(temp);
+                  temp = childSnapshot.Child("rotation").Child("x").Value.ToString();
+                  x = float.Parse(temp);
+                  temp = childSnapshot.Child("rotation").Child("y").Value.ToString();
+                  y = float.Parse(temp);
+                  temp = childSnapshot.Child("rotation").Child("z").Value.ToString();
+                  z = float.Parse(temp);
+                  Debug.Log("GETTING FIREBASE VALUES position: w " + w + " x: " + x + " y: " + y + " z: " + z);
+
+                  Quaternion rotation = new Quaternion(x, y, w, z);
+                  spawner.loadMnemonic(typeId, uid, position, rotation);
+               }
+            }
+         }
+      });
    }
 }
