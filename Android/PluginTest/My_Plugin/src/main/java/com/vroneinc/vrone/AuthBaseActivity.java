@@ -106,6 +106,7 @@ public class AuthBaseActivity extends FragmentActivity implements
             String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
             String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
+            // TODO strings.xml
             DatabaseReference users = FirebaseDatabase.getInstance().getReference("Users");
             // Set the name of the user in the database
             users.child(userId).child("Name").setValue(userName);

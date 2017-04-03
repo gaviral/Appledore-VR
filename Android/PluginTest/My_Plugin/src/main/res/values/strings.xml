@@ -2,4 +2,26 @@
     <string name="app_name">VR-One</string>
     <string name="sign_out">Sign Out</string>
     <string name="send_button_label">Send</string>
+    <string name="set_title_button">Set Title</string>
+    <string name="forum_title">VR-One Forum</string>
+    <string name="database_forum">Forum</string>
+    <string name="database_list_topics">ListTopics</string>
+    <string name="database_topics">Topics</string>
+    <string name="database_views">views</string>
+    <string name="database_replies">replies</string>
+    <string name="database_posts">posts</string>
+    <string name="title_general">General</string>
+    <string name="description_general">This is where you can ask general questions</string>
+    <string name="title_mnemonics">Mnemonics</string>
+    <string name="description_mnemonics">This is the place to discuss and share mnemonics</string>
+    <string name="title_support">Support</string>
+    <string name="description_support">This is where you can ask for technical support</string>
+    <string name="new_topic_ab">[%1$s] New Topic</string>
+    <string name="cur_topic_ab">[%1$s] %2$s</string>
+    <string name="set_title_ab">[%1$s]\u0020</string>
+    <string name="no_title_toast">Title has to be at least %1$d characters</string>
+    <string name="create_new_post">Create new post</string>
+    <string name="empty_topics_text">There are no topics here yet.</string>
+    <string name="replies_topic_adapter">Replies: %1$s</string>
+    <string name="views_topic_adapter">Views: %1$s</string>
 </resources>

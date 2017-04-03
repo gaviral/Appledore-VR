@@ -8,51 +8,40 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:theme="@android:style/Theme.Holo.Light"
+    android:animateLayoutChanges="true"
     tools:context="com.vroneinc.vrone.MainActivity">
 
-    <ListView
-        android:id="@+id/messageListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/linearLayout"
-        android:stackFromBottom="true"
-        android:divider="@android:color/transparent"
-        android:transcriptMode="alwaysScroll"
-        tools:listitem="@layout/item_message"/>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:orientation="horizontal">
-
-
-        <EditText
-            android:id="@+id/messageEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:enabled="false"
-            android:text="@string/send_button_label"/>
-
-    </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
+    <Button
+        android:id="@+id/createTopicButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_alignStart="@+id/topicListView"
+        android:enabled="false"
+        android:layout_alignParentEnd="true"
+        android:text="@string/create_new_post"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/categoryListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_category"/>
+
+    <ListView
+        android:id="@+id/topicListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/createTopicButton"
+        android:visibility="gone"
+        android:paddingTop="10dp"
+        tools:listitem="@layout/item_topic"/>
+
+    <TextView
+        android:id="@+id/empty"
+        android:text="@string/empty_topics_text"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
@@ -27,6 +27,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+        }
     }
 }
 
@@ -36,24 +38,21 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     //Firebase
     compile 'com.google.firebase:firebase-database:10.2.0'
     compile 'com.google.firebase:firebase-auth:10.2.0'
     compile 'com.google.firebase:firebase-messaging:10.2.0'
-
-
     compile 'com.google.android.gms:play-services-maps:10.2.0'
     compile 'com.google.android.gms:play-services-location:10.2.0'
     compile 'com.google.android.gms:play-services-auth:10.2.0'
-
-
     testCompile 'junit:junit:4.12'
+    compile 'com.squareup.picasso:picasso:2.5.0'
+
 }
 
 
 
-android.libraryVariants.all { variant ->
+/*android.libraryVariants.all { variant ->
     // Task names.
     String variantName = "${variant.name.capitalize()}"; // Like 'Debug'
     String deployTaskGroup = "plugin";
@@ -73,6 +72,6 @@ android.libraryVariants.all { variant ->
         include(sourceAARName)
         rename(sourceAARName, targetAARName)
     }.group = deployTaskGroup;
-}
+}*/
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -8,25 +8,45 @@
               android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/photoImageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true" />
+        android:id="@+id/userPic"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="3dp"
+        android:paddingTop="1dp"/>
 
     <TextView
-        android:id="@+id/messageTextView"
-        android:layout_width="wrap_content"
+        android:id="@+id/userName"
+        android:layout_width="200sp"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:text="Message" />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/userPic"
+        android:paddingLeft="6dp"
+        android:paddingRight="5dp"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:textStyle="bold"
+        android:textColor="@android:color/darker_gray" />
 
     <TextView
-        android:id="@+id/nameTextView"
+        android:id="@+id/timestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        tools:text="Name" />
+        android:layout_alignBaseline="@id/userName"
+        android:layout_alignParentRight="true"
+        android:paddingRight="9dp"
+        android:paddingBottom="1dp"
+        android:textSize="10sp"
+        android:textAppearance="?android:attr/textAppearanceListItem" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timestamp"
+        android:layout_toRightOf="@id/userPic"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="3dp"
+        android:textAppearance="?android:attr/textAppearanceListItem" />
+
+</RelativeLayout>

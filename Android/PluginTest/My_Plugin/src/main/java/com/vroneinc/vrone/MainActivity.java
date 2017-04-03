@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.Set;
 
 public class MainActivity extends Activity {
@@ -58,6 +61,10 @@ public class MainActivity extends Activity {
     private Button unityButton;
     private Button forumButton;
     private Button findButton;
+
+    // User id
+    private String mUserId = null;
+    private boolean mUserIdSent = false;
 
 
     @Override
@@ -129,6 +136,16 @@ public class MainActivity extends Activity {
             mBluetoothListener = new BluetoothListener(this, mHandler);
         }
 
+        if (!mUserIdSent) {
+            // Firebase user id stuff
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                mUserId = user.getUid();
+                sendUserIdToController();
+                mUserIdSent = true;
+            }
+        }
+
     }
 
     @Override
@@ -153,6 +170,12 @@ public class MainActivity extends Activity {
                 mBluetoothListener.start();
             }
         }*/
+    }
+
+    // Method to send the user id to controller via Bluetooth
+    private void sendUserIdToController() {
+        byte send[] = mUserId.getBytes();
+        mBluetoothListener.write(send);
     }
 
     /**
