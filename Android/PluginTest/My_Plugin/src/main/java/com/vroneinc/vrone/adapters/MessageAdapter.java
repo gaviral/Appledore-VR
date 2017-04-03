@@ -7,7 +7,11 @@ package com.vroneinc.vrone.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 import com.vroneinc.vrone.R;
 import com.vroneinc.vrone.data.ForumPost;
 
+import java.io.InputStream;
 import java.util.List;
 
 //import com.squareup.picasso.Picasso;
@@ -55,6 +60,9 @@ public class MessageAdapter extends ArrayAdapter<ForumPost> {
             // view recycled, retrieve view holder object
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        
+        // This is for loading the user profile picture asynchronously as an avatar
+        new DownloadImageTask(viewHolder.userPic).execute(forumPost.getAvatarUrl());
 
         viewHolder.userName.setText(forumPost.getUserName());
         viewHolder.post.setText(forumPost.getMessage());
@@ -62,12 +70,34 @@ public class MessageAdapter extends ArrayAdapter<ForumPost> {
         String timeSpan = DateUtils.getRelativeTimeSpanString(forumPost.getTimestamp(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE).toString();
         viewHolder.timestamp.setText(timeSpan);
 
-        // TODO will probably not work with Unity (UPDATE: does not, find something else)
-        /*Picasso.with(getContext()) //Context
-                .load(forumPost.getAvatarUrl()) //URL/FILE
-                .into(viewHolder.userPic);*/
-
         // Return the completed view
         return convertView;
+    }
+
+    // class for displaying user image asynchronously
+    // using Picasso would have been much easier, but it does not work with Unity unfortunately
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 }
