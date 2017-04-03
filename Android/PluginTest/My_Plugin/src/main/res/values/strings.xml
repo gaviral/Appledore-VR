@@ -10,6 +10,9 @@
     <string name="database_views">views</string>
     <string name="database_replies">replies</string>
     <string name="database_posts">posts</string>
+    <string name="database_users">Users</string>
+    <string name="database_name">Name</string>
+    <string name="database_email">Email</string>
     <string name="title_general">General</string>
     <string name="description_general">This is where you can ask general questions</string>
     <string name="title_mnemonics">Mnemonics</string>
@@ -24,4 +27,5 @@
     <string name="empty_topics_text">There are no topics here yet.</string>
     <string name="replies_topic_adapter">Replies: %1$s</string>
     <string name="views_topic_adapter">Views: %1$s</string>
+    <string name="sign_out_text">Signed Out Successfully</string>
 </resources>

@@ -13,7 +13,8 @@
         android:layout_height="40sp"
         android:layout_alignParentLeft="true"
         android:paddingLeft="3dp"
-        android:paddingTop="1dp"/>
+        android:paddingTop="3dp"
+        android:src="@drawable/anonymous" />
 
     <TextView
         android:id="@+id/userName"

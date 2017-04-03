@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     signingConfigs {
@@ -8,27 +8,33 @@ android {
             storeFile file('C:/Users/mars/.android/debug.keystore')
             storePassword 'android'
         }
+        release {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('android.jks')
+            storePassword 'android'
+        }
     }
-
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
-
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        signingConfig signingConfigs.release
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
         }
+    }
+    productFlavors {
     }
 }
 
@@ -46,13 +52,12 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.2.0'
     compile 'com.google.android.gms:play-services-auth:10.2.0'
     testCompile 'junit:junit:4.12'
-    compile 'com.squareup.picasso:picasso:2.5.0'
-
+    //compile 'com.squareup.picasso:picasso:2.5.2'
 }
 
 
 
-/*android.libraryVariants.all { variant ->
+android.libraryVariants.all { variant ->
     // Task names.
     String variantName = "${variant.name.capitalize()}"; // Like 'Debug'
     String deployTaskGroup = "plugin";
@@ -72,6 +77,6 @@ dependencies {
         include(sourceAARName)
         rename(sourceAARName, targetAARName)
     }.group = deployTaskGroup;
-}*/
+}
 
 apply plugin: 'com.google.gms.google-services'

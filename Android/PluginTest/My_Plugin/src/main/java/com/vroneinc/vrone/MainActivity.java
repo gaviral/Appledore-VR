@@ -9,16 +9,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Set;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AuthBaseActivity {
     // Code for BT permission
     //private final static int REQUEST_ENABLE_BT = 87;
 
@@ -66,6 +74,8 @@ public class MainActivity extends Activity {
     private String mUserId = null;
     private boolean mUserIdSent = false;
 
+    private GoogleApiClient mGoogleApiClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +83,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.content_main);
 
         context = getApplicationContext();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mGso)
+                .build();
+
+        // TODO action bar in Unity text is vrone (make it VR-One)
 
         // Initialize bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -146,6 +163,28 @@ public class MainActivity extends Activity {
             }
         }
 
+    }
+
+    public void signOut() {
+        super.signOut(mGoogleApiClient);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.sign_out_menu) {//sign out
+            signOut();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

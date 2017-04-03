@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "620672971561-s69f1vcp1ci6a98n88stnuv0t83pj78d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "b952e43a8f4ad677409397c1e53eea64c7935665"
+          }
+        },
+        {
+          "client_id": "620672971561-cp0f540fgjf2f7cnnipoareb247q1tk8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "b8f5949e9ab81499bea0f8036cc08307cb91ee64"
+          }
+        },
+        {
+          "client_id": "620672971561-bd9624fghh3drunmhjh9ekeji247pf7s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "0e71ca46d0e454f25f60dc10a80ead6362d17c9b"
+          }
+        },
+        {
           "client_id": "620672971561-bl5mq25b91nntd7hk2n9ru2kpa7st1a5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

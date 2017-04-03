@@ -20,7 +20,7 @@ import com.vroneinc.vrone.data.ForumPost;
 
 import java.util.List;
 
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 public class MessageAdapter extends ArrayAdapter<ForumPost> {
     private static class ViewHolder {
@@ -62,10 +62,10 @@ public class MessageAdapter extends ArrayAdapter<ForumPost> {
         String timeSpan = DateUtils.getRelativeTimeSpanString(forumPost.getTimestamp(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE).toString();
         viewHolder.timestamp.setText(timeSpan);
 
-        // TODO will probably not work with Unity
-        Picasso.with(getContext()) //Context
+        // TODO will probably not work with Unity (UPDATE: does not, find something else)
+        /*Picasso.with(getContext()) //Context
                 .load(forumPost.getAvatarUrl()) //URL/FILE
-                .into(viewHolder.userPic);
+                .into(viewHolder.userPic);*/
 
         // Return the completed view
         return convertView;

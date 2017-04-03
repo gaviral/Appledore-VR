@@ -25,7 +25,8 @@
     <application
         android:allowBackup="true"
         android:label="VR-One"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:icon="@drawable/vrone_logo_temp_tp">
 
         <meta-data android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBNl9xcd_PaAwcnBuPPnQlxkUbAh6RsBHc"/>
@@ -37,10 +38,7 @@
         <activity
             android:name="com.vroneinc.vrone.MainActivity"
             android:theme="@android:style/Theme.Material.Light" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity android:name=".LauncherActivity"
@@ -49,6 +47,10 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity

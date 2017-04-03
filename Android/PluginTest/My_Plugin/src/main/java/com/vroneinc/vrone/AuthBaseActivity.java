@@ -1,10 +1,15 @@
 package com.vroneinc.vrone;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -18,8 +23,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-// TODO: Implement Android to FPGA shit
-// TODO: Clean up
 
 public class AuthBaseActivity extends FragmentActivity implements
         GoogleApiClient.OnConnectionFailedListener {
@@ -33,9 +36,13 @@ public class AuthBaseActivity extends FragmentActivity implements
     protected FirebaseAuth.AuthStateListener mAuthListener;
     protected GoogleSignInOptions mGso;
 
+    private Resources mResources;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mResources = getResources();
 
         mGso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -64,12 +71,10 @@ public class AuthBaseActivity extends FragmentActivity implements
     @Override
     protected void onStart(){
         super.onStart();
-
         mAuth.addAuthStateListener(mAuthListener);
     }
 
     protected void signIn(GoogleApiClient googleApiClient){
-        Log.i("RESULT", "IS SIGNING IN");
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -80,6 +85,15 @@ public class AuthBaseActivity extends FragmentActivity implements
         Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
+                Toast toast = Toast.makeText(AuthBaseActivity.this,
+                        mResources.getString(R.string.sign_out_text),
+                        Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 100);
+                toast.show();
+
+                Intent i = new Intent(AuthBaseActivity.this, SignInActivity.class);
+                AuthBaseActivity.this.startActivity(i);
+                AuthBaseActivity.this.finish();
             }
         });
     }
@@ -98,20 +112,18 @@ public class AuthBaseActivity extends FragmentActivity implements
     }
 
     // Method to upload the user into the database
-    // TODO: Might create a data class for Users and move this in there
     protected void uploadUser(){
-        // TODO: If a data class for Users created, might want to split this function into several setters/getters
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-            String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String userId = user.getUid();
+            String userName = user.getDisplayName();
+            String userEmail = user.getEmail();
 
-            // TODO strings.xml
-            DatabaseReference users = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference users = FirebaseDatabase.getInstance().getReference(mResources.getString(R.string.database_users));
             // Set the name of the user in the database
-            users.child(userId).child("Name").setValue(userName);
+            users.child(userId).child(mResources.getString(R.string.database_name)).setValue(userName);
             // Set the email of the user in the database
-            users.child(userId).child("Email").setValue(userEmail);
+            users.child(userId).child(mResources.getString(R.string.database_email)).setValue(userEmail);
         }
     }
 
