@@ -25,6 +25,8 @@ import com.vroneinc.vrone.data.ForumPost;
 import java.io.InputStream;
 import java.util.List;
 
+import static com.vroneinc.vrone.TopicActivity.ANONYMOUS;
+
 //import com.squareup.picasso.Picasso;
 
 public class MessageAdapter extends ArrayAdapter<ForumPost> {
@@ -60,9 +62,14 @@ public class MessageAdapter extends ArrayAdapter<ForumPost> {
             // view recycled, retrieve view holder object
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        
-        // This is for loading the user profile picture asynchronously as an avatar
-        new DownloadImageTask(viewHolder.userPic).execute(forumPost.getAvatarUrl());
+
+        if (forumPost.getUserName().equals(ANONYMOUS)) {
+            viewHolder.userPic.setImageResource(R.drawable.anonymous);
+        }
+        else {
+            // This is for loading the user profile picture asynchronously as an avatar
+            new DownloadImageTask(viewHolder.userPic).execute(forumPost.getAvatarUrl());
+        }
 
         viewHolder.userName.setText(forumPost.getUserName());
         viewHolder.post.setText(forumPost.getMessage());
