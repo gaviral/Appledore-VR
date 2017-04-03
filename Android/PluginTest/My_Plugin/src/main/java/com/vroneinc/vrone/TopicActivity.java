@@ -231,7 +231,7 @@ public class TopicActivity extends Activity {
                     else {
                         Toast toast = Toast.makeText(mContext, getString(R.string.no_title_toast, MIN_TITLE_LENGTH), Toast.LENGTH_SHORT);
                         // position the toast to the title edit text
-                        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 400);
+                        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 420);
                         toast.show();
                     }
                 }
