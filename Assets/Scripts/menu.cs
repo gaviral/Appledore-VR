@@ -26,8 +26,8 @@ public class menu : MonoBehaviour {
     }
 
     public void showCategories() {
-        Debug.Log("showCatergory");
-        DirectoryInfo levelDirectoryPath = new DirectoryInfo("Assets/Menu/");
+        //Debug.Log("showCatergory");
+        DirectoryInfo levelDirectoryPath = new DirectoryInfo("Assets/Resources/Menu/");
         DirectoryInfo[] categoryDirectories = levelDirectoryPath.GetDirectories();
 
         //   FileInfo[] fileInfo = levelDirectoryPath.GetFiles("*.*", SearchOption.AllDirectories);
