@@ -154,10 +154,6 @@ public class BluetoothListener {
             mConnectedThread = null;
         }
 
-        if (device == null) {
-            Log.i("DEVICE IS NULL BRUH", "WHY THOUGH");
-        }
-
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device, secure);
         mConnectThread.start();
@@ -240,6 +236,24 @@ public class BluetoothListener {
         mState = STATE_NONE;
         // Update UI title
         updateUserInterfaceTitle();
+    }
+
+    /**
+     * Write to the ConnectedThread in an unsynchronized manner
+     *
+     * @param out The bytes to write
+     * @see ConnectedThread#write(byte[])
+     */
+    public void write(byte[] out) {
+        // Create temporary object
+        ConnectedThread r;
+        // Synchronize a copy of the ConnectedThread
+        synchronized (this) {
+            if (mState != STATE_CONNECTED) return;
+            r = mConnectedThread;
+        }
+        // Perform the write unsynchronized
+        r.write(out);
     }
 
     /**

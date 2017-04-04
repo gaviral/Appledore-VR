@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
@@ -22,6 +23,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import static android.graphics.Color.BLACK;
 
 public class SignInActivity extends AuthBaseActivity implements View.OnClickListener {
 
@@ -40,6 +43,10 @@ public class SignInActivity extends AuthBaseActivity implements View.OnClickList
         setContentView(R.layout.activity_sign_in);
 
         mContentView = (RelativeLayout) findViewById(R.id.activity_sign_in);
+
+        //getActionBar().hide();
+        Window window = getWindow();
+        window.setStatusBarColor(BLACK);
 
         signInButton = (SignInButton) findViewById(R.id.GoogleSignInButton);
         signInButton.setOnClickListener(this);
@@ -162,7 +169,7 @@ public class SignInActivity extends AuthBaseActivity implements View.OnClickList
             Intent intent = new Intent(this, MainActivity.class);
             super.handleSignInResult(result, intent);
         } else{
-            Log.i("Result", "Not success");
+            Log.i("Result", "Not successful");
         }
     }
 

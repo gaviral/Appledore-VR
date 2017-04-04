@@ -3,6 +3,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/simple_splash"/>
+            android:src="@drawable/appledore_splash"/>
     </item>
 </selector>

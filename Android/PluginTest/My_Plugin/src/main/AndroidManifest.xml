@@ -26,7 +26,8 @@
     <application
         android:allowBackup="true"
         android:label="VR-One"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:icon="@drawable/vrone_logo_temp_tp">
 
         <meta-data android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBNl9xcd_PaAwcnBuPPnQlxkUbAh6RsBHc"/>
@@ -37,9 +38,16 @@
 
         <activity
             android:name="com.vroneinc.vrone.MainActivity"
-            android:theme="@android:style/Theme.Material.Light" />
+            android:theme="@android:style/Theme.Material.Light" >
 
-        <activity android:name=".LauncherActivity">
+        </activity>
+
+        <activity android:name=".LauncherActivity"
+            android:theme="@style/LauncherTheme">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -50,10 +58,15 @@
             android:name="com.vroneinc.vrone.GameActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name="com.vroneinc.vrone.ForumActivity"
-            android:screenOrientation="portrait"/>
+            android:name="com.vroneinc.vrone.TopicActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Material.Light" />
         <activity
             android:name="com.vroneinc.vrone.CameraDemoActivity"/>
+        <activity
+            android:name="com.vroneinc.vrone.ForumActivity"
+            android:theme="@android:style/Theme.Material.Light"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".SignInActivity" />
