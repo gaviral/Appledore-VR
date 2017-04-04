@@ -5,10 +5,13 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -51,7 +54,8 @@ public class MainActivity extends AuthBaseActivity {
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 4;
+    private static final int REQUEST_ENABLE_CAMERA = 5;
 
     /**
      * Name of the connected device
@@ -164,16 +168,7 @@ public class MainActivity extends AuthBaseActivity {
             // Initialize the BluetoothChatService to perform bluetooth connections
             getPairedDevice();
             mBluetoothListener = new BluetoothListener(this, mHandler);
-        }
-
-        if (!mUserIdSent) {
-            // Firebase user id stuff
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null) {
-                mUserId = user.getUid();
-                sendUserIdToController();
-                mUserIdSent = true;
-            }
+            sendUserIdToController();
         }
 
     }
@@ -226,8 +221,15 @@ public class MainActivity extends AuthBaseActivity {
 
     // Method to send the user id to controller via Bluetooth
     private void sendUserIdToController() {
-        byte send[] = mUserId.getBytes();
-        mBluetoothListener.write(send);
+        if (!mUserIdSent) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null && mBluetoothListener != null) {
+                mUserId = user.getUid();
+                byte send[] = mUserId.getBytes();
+                mBluetoothListener.write(send);
+                mUserIdSent = true;
+            }
+        }
     }
 
     /**
@@ -308,6 +310,7 @@ public class MainActivity extends AuthBaseActivity {
                     getPairedDevice();
                     // Bluetooth is now enabled, so set up the listener
                     mBluetoothListener = new BluetoothListener(this, mHandler);
+                    sendUserIdToController();
                 } else {
                     // User did not enable Bluetooth or an error occurred
                     Log.d(TAG, "BT not enabled");
@@ -373,8 +376,34 @@ public class MainActivity extends AuthBaseActivity {
 
     //  when the camera start button is pressed
     private void dispatchTakePictureIntent(View v) {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            startCameraIntent();
+        }
+        else {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] {android.Manifest.permission.CAMERA}, REQUEST_ENABLE_CAMERA);
+        }
+    }
+
+    private void startCameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ENABLE_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startCameraIntent();
+                } else {
+                    Toast toast = Toast.makeText(context, getResources().getString(R.string.camera_denied_toast), Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                return;
+            }
+            // TODO other permissions here
+        }
     }
 
 }

@@ -28,5 +28,6 @@
     <string name="replies_topic_adapter">Replies: %1$s</string>
     <string name="views_topic_adapter">Views: %1$s</string>
     <string name="sign_out_text">Signed Out Successfully</string>
+    <string name="camera_denied_toast">Camera permission is needed to use this feature</string>
     <integer name="google_play_services_version">10298000</integer>
 </resources>
