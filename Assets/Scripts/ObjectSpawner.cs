@@ -47,6 +47,12 @@ public class ObjectSpawner : MonoBehaviour
         // GameObject.Instantiate(mnemonic, getMnemonicPosition(), Quaternion.identity);
 
     }
+	void clicked() {
+		Debug.Log ("Clicked");
+		var filename = "screenshot.png";
+		var path = "/Snapshots/" + filename;
+		Application.CaptureScreenshot(path);
+	}
     
     public void Update(){
         if (Input.touchCount > 0)
@@ -55,6 +61,7 @@ public class ObjectSpawner : MonoBehaviour
             {
                 Debug.Log("Touched");
                 placeMnemonic();
+				clicked ();
                 wasTouching = true;
             }
         }
@@ -68,6 +75,8 @@ public class ObjectSpawner : MonoBehaviour
 
             if (placeMnemonicMode)
             {
+                Debug.Log("spacePressed");
+				clicked ();
                 placeMnemonic();
             }
             //placeMnemonicMode = false; //todo: (hardcoded)

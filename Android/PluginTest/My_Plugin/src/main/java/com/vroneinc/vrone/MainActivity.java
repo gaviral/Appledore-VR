@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ public class MainActivity extends Activity {
     //private final static int REQUEST_ENABLE_BT = 87;
 
     private Context context;
+
 
     // a bluetooth “socket” to a bluetooth device
     /*private BluetoothSocket mmSocket = null;
@@ -38,6 +40,7 @@ public class MainActivity extends Activity {
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     /**
      * Name of the connected device
@@ -101,6 +104,16 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 //connectDevice(true);
                 startForumButtonPressed(v);
+            }
+        });
+
+        // add listener for camera button
+        forumButton = (Button) findViewById(R.id.camerabutton);
+        forumButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //connectDevice(true);
+                dispatchTakePictureIntent(v);
             }
         });
 
@@ -295,4 +308,11 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, ForumActivity.class);
         startActivity(intent);
     }
+
+    //  when the camera start button is pressed
+    private void dispatchTakePictureIntent(View v) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivity(intent);
+    }
+
 }

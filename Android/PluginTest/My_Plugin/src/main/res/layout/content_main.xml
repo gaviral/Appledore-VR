@@ -18,7 +18,7 @@
         android:id="@+id/connectbutton"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:drawableStart="@drawable/bluetooth"
         android:fontFamily="sans-serif"
         android:padding="16dp"
@@ -42,8 +42,8 @@
         android:id="@+id/forumbutton"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/memcastle"
         android:layout_marginTop="39dp"
+        android:drawableStart="@drawable/memcastle"
         android:fontFamily="sans-serif"
         android:padding="16dp"
         android:text="Start Forum"
@@ -51,14 +51,25 @@
 
     <!--button 3-->
     <Button
+        android:id="@+id/camerabutton"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:drawableStart="@drawable/memcastle"
+        android:fontFamily="sans-serif"
+        android:padding="16dp"
+        android:text="Camera"
+        android:textSize="25sp" />
+
+    <Button
         android:id="@+id/findbutton"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/controller1600"
         android:layout_marginTop="32dp"
+        android:drawableStart="@drawable/controller1600"
         android:fontFamily="sans-serif"
         android:padding="16dp"
-        android:text="Controller Locator"
+        android:text="Controller"
         android:textSize="25sp" />
 
 </LinearLayout>

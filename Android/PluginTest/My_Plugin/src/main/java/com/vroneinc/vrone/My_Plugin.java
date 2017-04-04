@@ -2,7 +2,7 @@ package com.vroneinc.vrone;
 
 import android.util.Log;
 
-public class My_Plugin
+public class    My_Plugin
 {
     public static final String COMMAND_FORWARD = "F";
     public static final String COMMAND_BACKWARD = "B";
