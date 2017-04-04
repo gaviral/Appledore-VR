@@ -27,7 +27,6 @@ import java.util.List;
 
 import static com.vroneinc.vrone.TopicActivity.ANONYMOUS;
 
-//import com.squareup.picasso.Picasso;
 
 public class MessageAdapter extends ArrayAdapter<ForumPost> {
     private static class ViewHolder {
