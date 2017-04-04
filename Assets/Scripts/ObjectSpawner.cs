@@ -13,7 +13,7 @@ public class ObjectSpawner : MonoBehaviour
    public Camera cam;
 
    //private Dictionary<int, GameObject> mnemonicDict;
-   private Dictionary<string, GameObject> mnemonicDict;
+   public Dictionary<string, GameObject> mnemonicDict;
    private string menuSelectedTypeName;
    private List<UniqueGameObject> spawnedObjects;
    private int uidTracker = 0;
@@ -37,7 +37,7 @@ public class ObjectSpawner : MonoBehaviour
       }
    }
 
-    void Start(){
+    void Awake(){
       placeMnemonicMode = true;
       mnemonicDict = new Dictionary<string, GameObject>();
       spawnedObjects = new List<UniqueGameObject>();
@@ -54,8 +54,6 @@ public class ObjectSpawner : MonoBehaviour
             // can modify to add number to make name unique
          }
       }
-
-      searchMnemonics(" sPiDer/  ");
 /*
       int i = 0;
       foreach (GameObject cur in gameObjectsList)
