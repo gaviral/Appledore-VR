@@ -13,10 +13,7 @@ public class ImageLoader : MonoBehaviour {
     private string urlBase = "https://firebasestorage.googleapis.com/v0/b/vr-one-4e3bb.appspot.com/o/snippedImages%2F";
 
     private void Start() {
-        // test using the wizard image
-        // TODO: remove this
-//        DownloadImage(urlBase +"testing121490830010343?alt=media&token=b6a5220a-616a-41b2-ab3d-8628645ed492");
-		DownloadImage(urlBase + "testing121490918413351?alt=media&token=dbc91101-d9d9-4e13-907c-d936cff40e84");
+		DownloadImage(urlBase + "0.PNG?alt=media");
     }
 
     public void DownloadImage(string url) {
