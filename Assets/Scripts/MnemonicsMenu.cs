@@ -96,10 +96,11 @@ public class MnemonicsMenu : MonoBehaviour {
     private void displayMnemonic() {
         FileInfo[] correctPrefab = getCorrectPrefab();
         // Debug.Log(correctPrefab[curMnemonicNum].ToString());
+        Debug.Log(curMnemonicNum);
         Debug.Log("displayMnemonics curMnemonicNum: " + "/Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name) );
         object1 = Resources.Load("Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
         Debug.Log(object1);
-        GameObject currentDisplayedPrefab = Instantiate(object1, this.gameObject.transform) as GameObject;
+        currentDisplayedPrefab = Instantiate(object1, this.gameObject.transform.GetChild(0).transform) as GameObject;
         
     }
 
@@ -128,7 +129,11 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     public void clearDisplayArea() {
-        throw new NotImplementedException();
+        destroyCurrentlyDisplayedPrefab();
+    }
+
+    private void destroyCurrentlyDisplayedPrefab() {
+        Destroy(currentDisplayedPrefab);
     }
 
     public int getCategoryNumOffset() {
@@ -145,8 +150,35 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     public void previousCategoryPage() {
-        --curCategoryPageNum;
+        decrementCurMnemonicNum();
         updateCategoryCubeNames();
+    }
+
+    private void decrementCurMnemonicNum() {
+        curMnemonicNum--;
+        if (curMnemonicNum == -1)
+            curMnemonicNum++;
+    }
+
+    public void displayCanvasRightButtonClicked() {
+        Debug.Log("insideDisplayCanvasRightButtonClicked()");
+        clearDisplayArea();
+        incrementCurMnemonicNum();
+        
+        displayMnemonic();
+    }
+
+    private void incrementCurMnemonicNum() {
+        curMnemonicNum++;
+        if (curMnemonicNum == prefabFileInfo0.Length)
+            curMnemonicNum--;
+    }
+
+    public void displayCanvasLeftButtonClicked() {
+        Debug.Log("insideDisplayCanvasLeftButtonClicked()");
+        clearDisplayArea();
+        curMnemonicNum--;
+        displayMnemonic();
     }
 
     private void updateCategoryCubeNames() {
