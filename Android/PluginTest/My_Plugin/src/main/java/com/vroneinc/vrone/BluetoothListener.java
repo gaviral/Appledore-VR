@@ -24,11 +24,15 @@ public class BluetoothListener {
     private static final String NAME_SECURE = "BluetoothListenerSecure";
     private static final String NAME_INSECURE = "BluetoothListenerInsecure";
 
-    // Unique UUID for this application
+    // UUID required for the BT dongle
     private static final UUID MY_UUID_SECURE =
             UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final UUID MY_UUID_INSECURE =
             UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    // Constant string messages
+    private static final String UNABLE_TO_CONNECT_MSG = "Unable to connect device";
+    private static final String CONNECTION_LOST_MSG = "Device connection was lost";
 
     // Member fields
     private final BluetoothAdapter mAdapter;
@@ -66,14 +70,14 @@ public class BluetoothListener {
      */
     public interface Constants {
 
-        // Message types sent from the BluetoothChatService Handler
+        // Message types sent from the Handler
         public static final int MESSAGE_STATE_CHANGE = 1;
         public static final int MESSAGE_READ = 2;
         public static final int MESSAGE_WRITE = 3;
         public static final int MESSAGE_DEVICE_NAME = 4;
         public static final int MESSAGE_TOAST = 5;
 
-        // Key names received from the BluetoothChatService Handler
+        // Key names received from the Handler
         public static final String DEVICE_NAME = "device_name";
         public static final String TOAST = "toast";
 
@@ -81,7 +85,7 @@ public class BluetoothListener {
 
 
     /**
-     * Update UI title according to the current state of the chat connection
+     * Update UI title according to the current state of the connection
      */
     private synchronized void updateUserInterfaceTitle() {
         mState = getState();
@@ -100,7 +104,7 @@ public class BluetoothListener {
     }
 
     /**
-     * Start the chat service. Specifically start AcceptThread to begin a
+     * Start the BT service. Specifically start AcceptThread to begin a
      * session in listening (server) mode. Called by the Activity onResume()
      */
     public synchronized void start() {
@@ -263,7 +267,7 @@ public class BluetoothListener {
         // Send a failure message back to the Activity
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Unable to connect device");
+        bundle.putString(Constants.TOAST, UNABLE_TO_CONNECT_MSG);
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -282,7 +286,7 @@ public class BluetoothListener {
         // Send a failure message back to the Activity
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Device connection was lost");
+        bundle.putString(Constants.TOAST, CONNECTION_LOST_MSG);
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -488,6 +492,9 @@ public class BluetoothListener {
             byte[] buffer = new byte[1024];
             int bytes;
 
+            // Send the user id to the controller
+            MainActivity.sendUserIdToController();
+
             // Keep listening to the InputStream while connected
             while (mState == STATE_CONNECTED) {
                 try {
@@ -513,7 +520,6 @@ public class BluetoothListener {
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
-
                 // Share the sent message back to the UI Activity
                 mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
                         .sendToTarget();

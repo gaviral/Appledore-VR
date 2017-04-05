@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.vroneinc.vrone.data.User;
 
 
 public class AuthBaseActivity extends FragmentActivity implements
@@ -113,17 +114,10 @@ public class AuthBaseActivity extends FragmentActivity implements
 
     // Method to upload the user into the database
     protected void uploadUser(){
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            String userId = user.getUid();
-            String userName = user.getDisplayName();
-            String userEmail = user.getEmail();
-
-            DatabaseReference users = FirebaseDatabase.getInstance().getReference(mResources.getString(R.string.database_users));
-            // Set the name of the user in the database
-            users.child(userId).child(mResources.getString(R.string.database_name)).setValue(userName);
-            // Set the email of the user in the database
-            users.child(userId).child(mResources.getString(R.string.database_email)).setValue(userEmail);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            User userData = new User(user.getDisplayName(), user.getEmail(), user.getUid());
+            userData.uploadUser();
         }
     }
 

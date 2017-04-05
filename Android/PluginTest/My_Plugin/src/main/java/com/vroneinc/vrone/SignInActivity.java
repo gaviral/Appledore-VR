@@ -108,7 +108,8 @@ public class SignInActivity extends AuthBaseActivity implements View.OnClickList
             //case GoogleSignInButton: {
                 if(isNetworkAvailable(this)) {
                     signIn();
-                } else{
+                } else {
+                    // TODO handle this case
                     /*AlertDialog.Builder builder = new AlertDialog.Builder(
                             new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog));
 
@@ -197,7 +198,6 @@ public class SignInActivity extends AuthBaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed(){
-
         //go to home screen and clear back stack
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
