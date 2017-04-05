@@ -13,19 +13,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vroneinc.vrone.MainActivity">
 
-    <!-- button 1-->
-    <Button
-        android:id="@+id/connectbutton"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:drawableStart="@drawable/bluetooth"
-        android:fontFamily="sans-serif"
-        android:padding="16dp"
-        android:text="Bluetooth"
-        android:textSize="25sp" />
-
-    <!--button 2-->
+    <!--button 1-->
     <Button
         android:id="@+id/unitybutton"
         android:layout_width="240dp"
@@ -34,10 +22,10 @@
         android:layout_marginTop="39dp"
         android:fontFamily="sans-serif"
         android:padding="16dp"
-        android:text="Start Unity"
+        android:text="@string/start_unity"
         android:textSize="25sp" />
 
-    <!--button 3-->
+    <!--button 2-->
     <Button
         android:id="@+id/forumbutton"
         android:layout_width="240dp"
@@ -46,7 +34,7 @@
         android:drawableStart="@drawable/memcastle"
         android:fontFamily="sans-serif"
         android:padding="16dp"
-        android:text="Start Forum"
+        android:text="@string/start_forum"
         android:textSize="25sp" />
 
     <!--button 3-->
@@ -58,7 +46,7 @@
         android:drawableStart="@drawable/memcastle"
         android:fontFamily="sans-serif"
         android:padding="16dp"
-        android:text="Camera"
+        android:text="@string/start_camera"
         android:textSize="25sp" />
 
     <Button
@@ -69,7 +57,7 @@
         android:drawableStart="@drawable/controller1600"
         android:fontFamily="sans-serif"
         android:padding="16dp"
-        android:text="Controller"
+        android:text="@string/find_controller"
         android:textSize="25sp" />
 
 </LinearLayout>

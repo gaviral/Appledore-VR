@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,8 +23,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -34,7 +32,8 @@ public class MainActivity extends AuthBaseActivity {
     // Code for BT permission
     //private final static int REQUEST_ENABLE_BT = 87;
 
-    private Context context;
+    private Context mContext;
+    private Resources mResources;
 
 
     // a bluetooth “socket” to a bluetooth device
@@ -66,20 +65,19 @@ public class MainActivity extends AuthBaseActivity {
     private BluetoothAdapter mBluetoothAdapter = null;
 
     // Bluetooth listener
-    private BluetoothListener mBluetoothListener = null;
+    private static BluetoothListener mBluetoothListener = null;
 
     private String mMacAddress;
     private BluetoothDevice mBluetoothDevice = null;
 
     // UI buttons
-    private Button connectButton;
     private Button unityButton;
     private Button forumButton;
     private Button findButton;
 
     // User id
-    private String mUserId = null;
-    private boolean mUserIdSent = false;
+    private static String mUserId = null;
+    private static boolean mUserIdSent = false;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -89,7 +87,8 @@ public class MainActivity extends AuthBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_main);
 
-        context = getApplicationContext();
+        mContext = getApplicationContext();
+        mResources = getResources();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -105,15 +104,6 @@ public class MainActivity extends AuthBaseActivity {
             Log.i("FAILED", "Bluetooth is not supported");
             finish();
         }
-
-        // add listener for bluetooth connect button
-        connectButton = (Button) findViewById(R.id.connectbutton);
-        connectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                connectDevice(true);
-            }
-        });
 
         // add listener for unity start button
         unityButton = (Button) findViewById(R.id.unitybutton);
@@ -150,7 +140,8 @@ public class MainActivity extends AuthBaseActivity {
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplication(), CameraDemoActivity.class));
+                Intent intent = new Intent(getApplication(), CameraDemoActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -168,7 +159,7 @@ public class MainActivity extends AuthBaseActivity {
             // Initialize the BluetoothChatService to perform bluetooth connections
             getPairedDevice();
             mBluetoothListener = new BluetoothListener(this, mHandler);
-            sendUserIdToController();
+            connectDevice(true);
         }
 
     }
@@ -185,10 +176,35 @@ public class MainActivity extends AuthBaseActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (mBluetoothListener != null) {
+            MenuItem optionBT = menu.findItem(R.id.toggle_bluetooth);
+            if (mBluetoothListener.getState() == BluetoothListener.STATE_CONNECTED) {
+                optionBT.setTitle(mResources.getString(R.string.disconnect_bluetooth));
+            } else if (mBluetoothListener.getState() != BluetoothListener.STATE_CONNECTING) {
+                optionBT.setTitle(mResources.getString(R.string.connect_bluetooth));
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.sign_out_menu) {//sign out
             signOut();
+            return true;
+        } else if (i == R.id.toggle_bluetooth) {
+            if (mBluetoothListener != null) {
+                if (mBluetoothListener.getState() == BluetoothListener.STATE_CONNECTED) {
+                    // if we are connected, disconnect Bluetooth
+                    mBluetoothListener.stop();
+                } else if (mBluetoothListener.getState() != BluetoothListener.STATE_CONNECTING) {
+                    // if we are not connected (and not currently connecting), connect Bluetooth
+                    connectDevice(true);
+                }
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -219,12 +235,15 @@ public class MainActivity extends AuthBaseActivity {
         }*/
     }
 
-    // Method to send the user id to controller via Bluetooth
-    private void sendUserIdToController() {
+    // Static method to send the user id to controller via Bluetooth
+    public static void sendUserIdToController() {
         if (!mUserIdSent) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null && mBluetoothListener != null) {
                 mUserId = user.getUid();
+                // add a null terminator to the end
+                // (so the controller knows when to stop
+                mUserId += "\0";
                 byte send[] = mUserId.getBytes();
                 mBluetoothListener.write(send);
                 mUserIdSent = true;
@@ -264,24 +283,21 @@ public class MainActivity extends AuthBaseActivity {
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
 
-                    //if (!readMessage.equals("\r\n"))
-                    // TODO: do whatever needs to be done for the command here
-
-                    My_Plugin.parseCommand(readMessage);
+                    CommandParser.parseCommand(readMessage);
 
                     Log.i("READ", mConnectedDeviceName + ":  " + readMessage);
                     break;
                 case BluetoothListener.Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     mConnectedDeviceName = msg.getData().getString(BluetoothListener.Constants.DEVICE_NAME);
-                    if (null != context) {
-                        Toast.makeText(context, "Connected to "
-                                + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                    if (null != mContext) {
+                        Toast.makeText(mContext, mResources.getString(R.string.bt_connected_message, mConnectedDeviceName),
+                                        Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case BluetoothListener.Constants.MESSAGE_TOAST:
-                    if (null != context) {
-                        Toast.makeText(context, msg.getData().getString(BluetoothListener.Constants.TOAST),
+                    if (null != mContext) {
+                        Toast.makeText(mContext, msg.getData().getString(BluetoothListener.Constants.TOAST),
                                 Toast.LENGTH_SHORT).show();
                     }
                     break;
@@ -310,11 +326,11 @@ public class MainActivity extends AuthBaseActivity {
                     getPairedDevice();
                     // Bluetooth is now enabled, so set up the listener
                     mBluetoothListener = new BluetoothListener(this, mHandler);
-                    sendUserIdToController();
+                    connectDevice(true);
                 } else {
                     // User did not enable Bluetooth or an error occurred
                     Log.d(TAG, "BT not enabled");
-                    Toast.makeText(this, "BT not enabled",
+                    Toast.makeText(this, mResources.getString(R.string.bt_not_enabled),
                             Toast.LENGTH_SHORT).show();
                     this.finish();
                 }
@@ -336,7 +352,7 @@ public class MainActivity extends AuthBaseActivity {
                 String deviceName = device.getName();
                 Log.i("NAME", deviceName);
                 String deviceHardwareAddress = device.getAddress(); // MAC address
-                if (deviceName.equals("Team17")) {
+                if (deviceName.equals(mResources.getString(R.string.bt_device_name))) {
                     mMacAddress = deviceHardwareAddress;
                     mConnectedDeviceName = deviceName;
                     mBluetoothDevice = device;
@@ -362,9 +378,10 @@ public class MainActivity extends AuthBaseActivity {
         mBluetoothListener.connect(device, secure);
     }
 
+
     // when the unity start button is pressed
     public void startUnityButtonPressed(View v) {
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(MainActivity.this, PalaceSelectionActivity.class);
         startActivity(intent);
     }
 
@@ -397,12 +414,12 @@ public class MainActivity extends AuthBaseActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startCameraIntent();
                 } else {
-                    Toast toast = Toast.makeText(context, getResources().getString(R.string.camera_denied_toast), Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(mContext, getResources().getString(R.string.camera_denied_toast), Toast.LENGTH_SHORT);
                     toast.show();
                 }
                 return;
             }
-            // TODO other permissions here
+            // TODO other possible permissions here
         }
     }
 

@@ -38,6 +38,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -98,15 +100,18 @@ public class CameraDemoActivity extends FragmentActivity implements AdapterView.
 
         // Initialize firebase reference
         FirebaseApp.initializeApp(this);
-        gpsDBReference = FirebaseDatabase.getInstance().getReference("Users/test_id/Controller/location");
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        gpsDBReference = FirebaseDatabase.getInstance().getReference(getResources().getString(R.string.database_controller_location, userId));
         gpsDBReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Update the controller's GPS location whenever we get data
                 GPSCoord coord = dataSnapshot.getValue(GPSCoord.class);
-                changeVRControllerGPS(coord.longitude, coord.latitude);
-                onGoToVrController(null);
-                Log.d("ControllerGPS", "Value is: " + coord);
+                if(coord != null) {
+                    changeVRControllerGPS(coord.longitude, coord.latitude);
+                    onGoToVrController(null);
+                    Log.d("ControllerGPS", "Value is: " + coord);
+                }
             }
 
             @Override
