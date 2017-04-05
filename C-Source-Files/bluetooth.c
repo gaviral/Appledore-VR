@@ -37,6 +37,19 @@ void bt_send_command(char *cmd) {
 	}
 }
 
+// Function to read incoming data
+void bt_read_command(char *buf) {
+	int i = 0;
+	while (1) {
+		if(Bluetooth_Status & Rx_Mask) {
+			buf[i] = Bluetooth_RxData;
+			printf("%c", Bluetooth_RxData); // TODO remove this
+			i++;
+			if(Bluetooth_RxData == '\0') break;
+		}
+	}
+}
+
 // function to translate inputs into navigation commands
 void translate_command(int input, char *command) {
 	char cmd = 0;

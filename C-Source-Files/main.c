@@ -14,6 +14,9 @@
 #include "key_codes.h"
 #include "db_send_gps.h"
 #include "gps.h"
+#include "adc.h"
+
+#define BLUETOOTH_RECEIVE_SIZE 40
 
 /*
  * To create a screen add it bellow
@@ -25,8 +28,9 @@ int current_screen_num = 1;
 volatile int * KEY_ptr = (int *) PUSHBUTTONS_BASE_ADDR;
 volatile int * slider_switch_ptr = (int *) SWITCHES_BASE_ADDR;
 int * red_leds_ptr = (int *) LEDS_BASE_ADDR;
+char adc_command[6];
 
-// global var for holding push button info
+// global variable for holding push button info
 volatile int pushbutton_pressed = NOKEY;
 
 
@@ -38,8 +42,9 @@ int main() {
 	controller_init();
 	init_bluetooth();
 
-	// TODO: Temporary, need to retrieve user id from Android and send it via BT
-	char *user_id = "test_id";
+	// user_id to be stored for http patch
+	char user_id[BLUETOOTH_RECEIVE_SIZE]; // allocate 40 characters for it
+	user_id[0] = '\0';
 
 	int press;
 	char command[MAX_CMD_SIZE];
@@ -50,6 +55,17 @@ int main() {
 	int started = 0;
 	int post_check = 0;
 
+	int adc_x = 511, adc_y = 511; // 511 is the "middle" idling value
+	int adc_x_prev = -1, adc_y_prev = -1; // the previous values of the adc readings
+	int stick_button_prev = -1; // the previous value of the stick button; set to impossible value by default
+
+	/* USER ID RETRIEVING CODE */
+	// This will block until we receive a (hopefully valid) user id, and a null character from bluetooth
+	bt_read_command(user_id);
+	printf("\nGot user id:%s\n", user_id);
+	send_gps_data(user_id);
+
+	/* Main while loop */
 	while(1) {
 		/* TOUCHSCREEN DETECTION CODE */
 		if(screen_touched()) {
@@ -70,8 +86,37 @@ int main() {
 			started = 0;
 		}
 
+		/* SPI READING FROM THE ADC CODE */
+		adc_x = adc_read_channel(0);
+		adc_y = adc_read_channel(1);
+
+		// only send the value if it's different from the last one
+		if(adc_x > adc_x_prev + 1 || adc_x < adc_x_prev - 1) {
+			adc_x_prev = adc_x;
+			format_int_for_bluetooth(adc_x, adc_command, 'x');
+			bt_send_command(adc_command);
+		}
+
+		// only send the value if it's different from the last one
+		if(adc_y > adc_y_prev + 1 || adc_y < adc_y_prev - 1) {
+			adc_y_prev = adc_y;
+			format_int_for_bluetooth(adc_y, adc_command, 'y');
+			bt_send_command(adc_command);
+		}
+
+		// check the stick button, and only send it once when it's been clicked
+		if(STICK_BUTTON != stick_button_prev) {
+			stick_button_prev = STICK_BUTTON;
+			if(!STICK_BUTTON) {
+				printf("\n");
+				sprintf(adc_command, "b");
+				printf("\n");
+				bt_send_command(adc_command);
+			}
+		}
+
 		/* PUSHBUTTON AND BLUETOOTH CODE */
-		*(red_leds_ptr) = *(slider_switch_ptr);
+		*(red_leds_ptr) = *(slider_switch_ptr); // <- VERY IMPORTANT CODE, DO NOT CHANGE
 		press = *KEY_ptr;
 
 		if (press == KEY1_V) {

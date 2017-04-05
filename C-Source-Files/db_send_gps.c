@@ -59,6 +59,8 @@ void http_patch(char *user_id, double lat, double lng) {
 
 // function to check the time interval for patching to database
 int http_patch_check(char *user_id, int *started) {
+	if(user_id == NULL) return 0;
+
 	int freq;
 	unsigned long cycles;
 	float duration = 0;
@@ -85,13 +87,17 @@ int http_patch_check(char *user_id, int *started) {
 	}
 	else {
 		// if TIME_INTERVAL_SEC seconds have passed, patch to database
-		get_gps_data(cur_gps);
-		// check for a signal, if there isn't any, don't send data
-		if (cur_gps->latitude != 0 && cur_gps->longitude != 0)
-			http_patch(user_id, cur_gps->latitude, cur_gps->longitude);
+		send_gps_data(user_id);
 		*started = 0;
 		return 1;
 	}
+}
+
+void send_gps_data(char *user_id) {
+	get_gps_data(cur_gps);
+	// check for a signal, if there isn't any, don't send data
+	if (cur_gps->latitude != 0 && cur_gps->longitude != 0)
+		http_patch(user_id, cur_gps->latitude, cur_gps->longitude);
 }
 
 // function to initialize the WiFi

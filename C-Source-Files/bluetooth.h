@@ -13,4 +13,4 @@ void delay(unsigned int mseconds);
 void init_bluetooth(void);
 void bt_send_command(char *cmd);
 void translate_command(int input, char *command);
-
+void bt_read_command(char *buf);

@@ -32,3 +32,4 @@ int http_patch_check(char *user_id, int *started);
 void init_wifi(void);
 int put_string_wifi(const char* string);
 int put_char_wifi(int c);
+void send_gps_data(char *user_id);
