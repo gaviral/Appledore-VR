@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MnemonicsMenu : MonoBehaviour {
-
     private int curMnemonicNum;
     private int curCategoryPageNum;
     private int numOfCategories;
@@ -21,20 +17,19 @@ public class MnemonicsMenu : MonoBehaviour {
     private FileInfo[] prefabFileInfo4;
     private UnityEngine.Object object1;
     private int curCategoryNum;
-    GameObject currentDisplayedPrefab;
+    private GameObject currentDisplayedPrefab;
+    public GameObject gameObjectToBeSpawn;
 
     // Use this for initialization
-    void Start () {
+    private void Start() {
         //variable initialization
         curMnemonicNum = 0;
         curCategoryPageNum = 0; // 0 1 2 3 and so on
-
         setMenuDirectoryPath();
         setNumOfCategoriesBeingDisplayed();
         getCategoriesInfo();
         getFilesInfo();
         updateCategoryCubeNames();
-        
     }
 
     private void getFilesInfo() {
@@ -44,48 +39,47 @@ public class MnemonicsMenu : MonoBehaviour {
         //Debug.Log("path: " + categoryDirectory[getCategoryNumOffset() + categoryCubeNum]);
 
         int numCategories = getNumOfCategoriesInCurrentPage();
-        if (numCategories>0) {
+        if (numCategories > 0) {
             Debug.Log("numCategories>0");
             prefabFileInfo0 = categoryDirectory[getCategoryNumOffset() + 0].GetFiles("*.prefab");
             //Debug.Log("getFiles:" + categoryDirectory[getCategoryNumOffset() + 0].GetFiles("*.prefab"));
         }
-        if (numCategories>1) {
-          //  Debug.Log("getFilesInfo");
+        if (numCategories > 1) {
+            //  Debug.Log("getFilesInfo");
             prefabFileInfo1 = categoryDirectory[getCategoryNumOffset() + 1].GetFiles("*.prefab");
         }
         if (numCategories > 2) {
-           // Debug.Log("getFilesInfo");
+            // Debug.Log("getFilesInfo");
             prefabFileInfo2 = categoryDirectory[getCategoryNumOffset() + 2].GetFiles("*.prefab");
         }
         if (numCategories > 3) {
-          //  Debug.Log("getFilesInfo");
+            //  Debug.Log("getFilesInfo");
             prefabFileInfo3 = categoryDirectory[getCategoryNumOffset() + 3].GetFiles("*.prefab");
         }
         if (numCategories > 4) {
-         //   Debug.Log("getFilesInfo");
+            //   Debug.Log("getFilesInfo");
             prefabFileInfo4 = categoryDirectory[getCategoryNumOffset() + 4].GetFiles("*.prefab");
         }
 
         //}
-        
-         foreach (FileInfo file in prefabFileInfo0) {
+
+        foreach (FileInfo file in prefabFileInfo0) {
             Debug.Log("file: " + file.Name);
-            
+
             //fileInfo[categoryCubeNum] = categoryDirectory[getCategoryNumOffset() + categoryCubeNum].GetFiles("*.prefab");
         }
-        
+
         //        FileInfo[] mnemonicFile = ;
     }
 
     // Update is called once per frame
-    void Update () {
-        
+    private void Update() {
     }
 
     public void categoryCubeClicked(int categoryCubeNum) {
         //Object object1 = Resources.Load("Menu/Animals/Elephant");
-        Debug.Log("Cube #" + categoryCubeNum.ToString() +" was clicked");
-        //clearDisplayArea();
+        Debug.Log("Cube #" + categoryCubeNum.ToString() + " was clicked");
+        clearDisplayArea();
         curCategoryNum = categoryCubeNum;
         curCategoryName = categoryDirectory[getCategoryNumOffset() + categoryCubeNum].Name;
         Debug.Log(curCategoryName);
@@ -97,11 +91,10 @@ public class MnemonicsMenu : MonoBehaviour {
         FileInfo[] correctPrefab = getCorrectPrefab();
         // Debug.Log(correctPrefab[curMnemonicNum].ToString());
         Debug.Log(curMnemonicNum);
-        Debug.Log("displayMnemonics curMnemonicNum: " + "/Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name) );
+        Debug.Log("displayMnemonics curMnemonicNum: " + "/Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
         object1 = Resources.Load("Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
         Debug.Log(object1);
         currentDisplayedPrefab = Instantiate(object1, this.gameObject.transform.GetChild(0).transform) as GameObject;
-        
     }
 
     private FileInfo[] getCorrectPrefab() {
@@ -164,7 +157,7 @@ public class MnemonicsMenu : MonoBehaviour {
         Debug.Log("insideDisplayCanvasRightButtonClicked()");
         clearDisplayArea();
         incrementCurMnemonicNum();
-        
+
         displayMnemonic();
     }
 
@@ -183,7 +176,7 @@ public class MnemonicsMenu : MonoBehaviour {
 
     private void updateCategoryCubeNames() {
         int numCategories = getNumOfCategoriesInCurrentPage();
-        if (numCategories>4)
+        if (numCategories > 4)
             GameObject.Find("CategoryCube4").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 4].Name;
         if (numCategories > 3)
             GameObject.Find("CategoryCube3").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 3].Name;
@@ -199,6 +192,14 @@ public class MnemonicsMenu : MonoBehaviour {
         return 4; //HARDCODED
     }
 }
+
+/*
+ * TODO: curMnemonicNum should not go out of bounds
+ * TODO: HARDCODED 4
+ * TODO: Emre android add a starting screen
+ * TODO: IMPORTANT - must change the lighting back to real time or something
+ * TODO: check performance and quality
+ */
 
 /*
 //Debug.Log("showCatergory");
