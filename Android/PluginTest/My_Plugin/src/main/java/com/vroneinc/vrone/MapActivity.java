@@ -54,7 +54,7 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
 /**
  * This shows how to change the camera position for the map.
  */
-public class CameraDemoActivity extends FragmentActivity implements AdapterView.OnItemSelectedListener {
+public class MapActivity extends FragmentActivity implements AdapterView.OnItemSelectedListener {
 
     /**
      * The amount by which to scroll the camera. Note that this amount is in raw pixels, not dp
@@ -369,7 +369,7 @@ public class CameraDemoActivity extends FragmentActivity implements AdapterView.
         try {
             mMap.setMyLocationEnabled(true);
         } catch(SecurityException e) {
-            Log.d("CameraDemoActivity", "Don't have permission to enable my location");
+            Log.d("MapActivity", "Don't have permission to enable my location");
         }
     }
 

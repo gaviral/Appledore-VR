@@ -110,7 +110,6 @@ public class MainActivity extends AuthBaseActivity {
         unityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //connectDevice(true);
                 startUnityButtonPressed(v);
             }
         });
@@ -120,7 +119,6 @@ public class MainActivity extends AuthBaseActivity {
         forumButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //connectDevice(true);
                 startForumButtonPressed(v);
             }
         });
@@ -130,7 +128,6 @@ public class MainActivity extends AuthBaseActivity {
         forumButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //connectDevice(true);
                 dispatchTakePictureIntent(v);
             }
         });
@@ -140,7 +137,7 @@ public class MainActivity extends AuthBaseActivity {
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), CameraDemoActivity.class);
+                Intent intent = new Intent(getApplication(), MapActivity.class);
                 startActivity(intent);
             }
         });
@@ -155,11 +152,16 @@ public class MainActivity extends AuthBaseActivity {
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        } else if (mBluetoothListener == null) {
-            // Initialize the BluetoothChatService to perform bluetooth connections
+        } else {
             getPairedDevice();
-            mBluetoothListener = new BluetoothListener(this, mHandler);
-            connectDevice(true);
+            if (mBluetoothListener == null) {
+                // Initialize the BluetoothListener to perform bluetooth connections (if null)
+                mBluetoothListener = new BluetoothListener(this, mHandler);
+            }
+            if (mBluetoothListener.getState() != BluetoothListener.STATE_CONNECTED) {
+                // check if we are already connected, if not, connect
+                connectDevice(true);
+            }
         }
 
     }
@@ -201,8 +203,14 @@ public class MainActivity extends AuthBaseActivity {
                     // if we are connected, disconnect Bluetooth
                     mBluetoothListener.stop();
                 } else if (mBluetoothListener.getState() != BluetoothListener.STATE_CONNECTING) {
-                    // if we are not connected (and not currently connecting), connect Bluetooth
-                    connectDevice(true);
+                    if (!mBluetoothAdapter.isEnabled()) {
+                        // this is a very unlikely case, but good to have in case bluetooth is somehow disabled
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                    } else {
+                        // if we are not connected (and not currently connecting), connect Bluetooth
+                        connectDevice(true);
+                    }
                 }
             }
             return true;
@@ -229,7 +237,7 @@ public class MainActivity extends AuthBaseActivity {
         /*if (mBluetoothListener != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (mBluetoothListener.getState() == BluetoothListener.STATE_NONE) {
-                // Start the Bluetooth chat services
+                // Start the Bluetooth services
                 mBluetoothListener.start();
             }
         }*/

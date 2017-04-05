@@ -40,7 +40,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:theme="@android:style/Theme.Material.Light"></activity>
+            android:theme="@android:style/Theme.Material.Light"/>
         <activity
             android:name=".LauncherActivity"
             android:theme="@style/LauncherTheme">
@@ -57,7 +57,7 @@
             android:name=".TopicActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Material.Light" />
-        <activity android:name=".CameraDemoActivity" />
+        <activity android:name=".MapActivity" />
         <activity
             android:name=".ForumActivity"
             android:screenOrientation="portrait"
