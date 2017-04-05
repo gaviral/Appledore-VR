@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -109,6 +108,7 @@ public class MnemonicsMenu : MonoBehaviour {
             case 1: return prefabFileInfo1;
             case 2: return prefabFileInfo2;
             case 3: return prefabFileInfo3;
+            case 4: return prefabFileInfo3;
             default: return prefabFileInfo0;
         }
     }
@@ -154,7 +154,11 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     private void DestroyCurrentlyDisplayedPrefab() {
-        Destroy(GameObject.Find("PrefabCanvas").GetComponent<GameObject>());
+        Debug.Log("inside DestroyCurrentlyDisplayedPrefab() /////////////////////");
+        if (GameObject.Find("PrefabCanvas").transform.childCount > 0) {
+            Debug.Log("child count: " + GameObject.Find("PrefabCanvas").transform.GetChild(0).ToString());
+            Destroy(GameObject.Find("PrefabCanvas").transform.GetChild(0).gameObject);
+        }
     }
 
     public int GetCategoryNumOffset() {
@@ -171,7 +175,7 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     public void PreviousCategoryPage() {
-        DecrementCurMnemonicNum();
+        --curCategoryPageNum;
         UpdateCategoryCubeNames();
     }
 
@@ -185,19 +189,19 @@ public class MnemonicsMenu : MonoBehaviour {
         Debug.Log("insideDisplayCanvasRightButtonClicked()");
         ClearDisplayArea();
         IncrementCurMnemonicNum();
-
         DisplayMnemonic();
     }
 
     private void IncrementCurMnemonicNum() {
         curMnemonicNum++;
-        if (curMnemonicNum == prefabFileInfo0.Length)
+        if (curMnemonicNum == GetCorrectPrefab().Length)
             curMnemonicNum--;
     }
 
     public void DisplayCanvasLeftButtonClicked() {
         Debug.Log("insideDisplayCanvasLeftButtonClicked()");
         ClearDisplayArea();
+        DecrementCurMnemonicNum();
         DisplayMnemonic();
     }
 
