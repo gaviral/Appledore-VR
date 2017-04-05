@@ -7,6 +7,13 @@ using System.Text.RegularExpressions;
 
 public class ObjectSpawner : MonoBehaviour
 {
+   [HideInInspector]
+   public AndroidJavaClass mainClass;
+   [HideInInspector]
+   public string userID;
+   [HideInInspector]
+   public string palaceUserID;
+
    public List<string> gameObjectsNamesList;
    public List<GameObject> gameObjectsList;    //populate list inside of Inspector
    public bool placeMnemonicMode;
@@ -15,22 +22,26 @@ public class ObjectSpawner : MonoBehaviour
    //private Dictionary<int, GameObject> mnemonicDict;
    public Dictionary<string, GameObject> mnemonicDict;
    private string menuSelectedTypeName;
-   private List<UniqueGameObject> spawnedObjects;
+   private HashSet<string> uidSet;
+   public List<UniqueGameObject> spawnedObjects;
    private int uidTracker = 0;
    bool wasTouching = false;
 
-   public class UniqueGameObject
+   public class UniqueGameObject 
    {
-      private GameObject gameObject;
-      public int uid;
+      public GameObject gameObject;
+      //public int uid;
+      public string uid;
+      public string palaceUserID;
       public string typeName;
       public Vector3 position;
       public Vector3 rotation;
 
-      public UniqueGameObject(GameObject gameObject, int uid, string typeName)
+      public UniqueGameObject(GameObject gameObject, string uid, string palaceUserID, string typeName)
       {
          this.gameObject = gameObject;
          this.uid = uid;
+         this.palaceUserID = palaceUserID;
          this.typeName = typeName;
          this.position = this.gameObject.transform.position;
          this.rotation = this.gameObject.transform.rotation.eulerAngles;
@@ -38,10 +49,17 @@ public class ObjectSpawner : MonoBehaviour
    }
 
     void Awake(){
+
+      //mainClass = new AndroidJavaClass("com.vroneinc.vrone.PalaceSelectionActivity");
+     // userID = mainClass.CallStatic<string>("getCurUserId");
+     // palaceUserID = mainClass.CallStatic<string>("getCurPalaceUserId");
+      userID = "OfGU9MONj7PiIinOJWUVbknfIpE2";
+      palaceUserID = "jnPhEjWfVEMI68T0tITXnZnerc92";
+
       placeMnemonicMode = true;
       mnemonicDict = new Dictionary<string, GameObject>();
       spawnedObjects = new List<UniqueGameObject>();
-      //cam = GetComponent< Camera > ();
+      uidSet = new HashSet<string>();
       GameObject[] objectsList = gameObjectsList.ToArray();
       string[] names = gameObjectsNamesList.ToArray();
 
@@ -54,6 +72,7 @@ public class ObjectSpawner : MonoBehaviour
             // can modify to add number to make name unique
          }
       }
+
 /*
       int i = 0;
       foreach (GameObject cur in gameObjectsList)
@@ -120,22 +139,25 @@ public class ObjectSpawner : MonoBehaviour
       }
       else
       {
-         GameObject spawn = GameObject.Instantiate(mnemonic, spawnPos, Quaternion.identity);
-         uniqueSpawn = new UniqueGameObject(spawn, ++uidTracker, typeName);
-         spawnedObjects.Add(uniqueSpawn);
-         FirebaseHandler database = GetComponent<FirebaseHandler>();
-         database.writeUniqueGameObject(uniqueSpawn);
+         string uid = userID + " " + uidTracker.ToString();
+         if (!uidSet.Contains(uid))
+         {
+            GameObject spawn = GameObject.Instantiate(mnemonic, spawnPos, Quaternion.identity);
+            uidTracker++;
+            uniqueSpawn = new UniqueGameObject(spawn, uid, palaceUserID, typeName);
+            spawnedObjects.Add(uniqueSpawn);
+            uidSet.Add(uid);
+            FirebaseHandler database = GetComponent<FirebaseHandler>();
+            database.writeUniqueGameObject(uniqueSpawn);
+         } else
+         {
+            Debug.Log("uidTracker broken - uid already exists");
+         }
       }
       return uniqueSpawn;
    }
 
-   public void loadSavedGame()
-   {
-      FirebaseHandler database = GetComponent<FirebaseHandler>();
-      database.loadDatabaseUniqueGameObjects();
-   }
-
-   public UniqueGameObject loadMnemonic(string typeName, int uid, Vector3 position, Vector3 rotation)
+   public UniqueGameObject loadMnemonic(string typeName, string uid, Vector3 position, Vector3 rotation)
    {
       UniqueGameObject uniqueSpawn = null;
       GameObject mnemonic = new GameObject();
@@ -146,15 +168,61 @@ public class ObjectSpawner : MonoBehaviour
       }
       else
       {
-         GameObject spawn = GameObject.Instantiate(mnemonic, position, Quaternion.Euler(rotation));
-         uniqueSpawn = new UniqueGameObject(spawn, uid, typeName);
-         spawnedObjects.Add(uniqueSpawn);
-         if (uid > uidTracker)
+         if (!uidSet.Contains(uid))
          {
-            uidTracker = uid;
+            GameObject spawn = GameObject.Instantiate(mnemonic, position, Quaternion.Euler(rotation));
+            uniqueSpawn = new UniqueGameObject(spawn, uid, palaceUserID, typeName);
+            spawnedObjects.Add(uniqueSpawn);
+
+            //for when objects are loaded at start of game
+            string[] temp = uid.Split(' ');
+            if (temp[0].Equals(userID))   //uid tracker is local to each user, not all users
+            {
+               int uidint = int.Parse(temp[1]);
+               if (uidint > uidTracker)
+               {
+                  uidTracker = uidint;
+               }
+            }
          }
       }
       return uniqueSpawn;
+   }
+   /*
+   public UniqueGameObject removeMnemonic(string typeName)
+   {
+         GameObject spawn = GameObject.Instantiate(mnemonic, spawnPos, Quaternion.identity);
+         uidTracker++;
+         string uid = userID + " " + uidTracker.ToString();
+         if (!uidSet.Contains(uid))
+         {
+            uniqueSpawn = new UniqueGameObject(spawn, uid, palaceUserID, typeName);
+            spawnedObjects.Add(uniqueSpawn);
+            uidSet.Add(uid);
+            FirebaseHandler database = GetComponent<FirebaseHandler>();
+            database.writeUniqueGameObject(uniqueSpawn);
+         }
+         else
+         {
+            Debug.Log("uidTracker broken - uid already exists");
+         }
+      }
+      return uniqueSpawn;
+   }*/
+
+   private void removeUniqueGameObject(GameObject gameObject)
+   {
+      foreach (UniqueGameObject cur in spawnedObjects)
+      {
+         if (cur.gameObject == gameObject)
+         {
+            uidSet.Remove(cur.uid);
+            spawnedObjects.Remove(cur);
+            FirebaseHandler database = GetComponent<FirebaseHandler>();
+            database.deleteUniqueGameObject(cur);
+            break;
+         }
+      }
    }
 
    //example code to connect button to placing mnemonic
@@ -172,7 +240,17 @@ public class ObjectSpawner : MonoBehaviour
    }
 
    public void Update(){
-        if (Input.touchCount > 0)
+      RaycastHit hit;
+      //ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+      if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit))
+      {
+         Transform objectHit = hit.transform;
+         Debug.Log(hit.transform.gameObject.tag);
+         // Do something with the object that was hit by the raycast.
+      }
+
+      if (Input.touchCount > 0)
         {
             if (!wasTouching)
             {

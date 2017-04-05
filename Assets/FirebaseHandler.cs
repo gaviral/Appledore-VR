@@ -41,7 +41,6 @@ public class FirebaseHandler : MonoBehaviour
       {
          InitializeFirebase();
       }
-      loadDatabaseUniqueGameObjects();
    }
 
    public class Item
@@ -66,6 +65,10 @@ public class FirebaseHandler : MonoBehaviour
       FirebaseApp app = FirebaseApp.DefaultInstance;
       app.SetEditorDatabaseUrl("https://vr-one-4e3bb.firebaseio.com/");
       if (app.Options.DatabaseUrl != null) app.SetEditorDatabaseUrl(app.Options.DatabaseUrl);
+
+      ObjectSpawner spawner = GetComponent<ObjectSpawner>();
+      DatabaseReference reference = FirebaseDatabase.DefaultInstance.GetReference("Users").Child(spawner.palaceUserID).Child("palace");
+      reference.ChildAdded += HandleChildAdded;
    }
 
    // Exit if escape (or back, on mobile) is pressed.
@@ -95,19 +98,69 @@ public class FirebaseHandler : MonoBehaviour
       string json = JsonUtility.ToJson(gameObject);
 
       DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-      reference.Child("palace").Child(gameObject.uid.ToString()).SetRawJsonValueAsync(json);
+      reference.Child("Users").Child(gameObject.palaceUserID).Child("palace").Child(gameObject.uid.ToString()).SetRawJsonValueAsync(json);
    }
 
-   public void updateUniqueGameObject()
+   public void deleteUniqueGameObject(ObjectSpawner.UniqueGameObject gameObject)
    {
-      //todo once changing object position added
+      DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+      reference.Child("Users").Child(gameObject.palaceUserID).Child("palace").Child(gameObject.uid.ToString());
+      reference.RemoveValueAsync();
    }
 
-   public void loadDatabaseUniqueGameObjects()
+   private void loadSnapshotUniqueGameObjects(DataSnapshot childSnapshot)
    {
       ObjectSpawner spawner = GetComponent<ObjectSpawner>();
 
-      FirebaseDatabase.DefaultInstance.GetReference("palace").GetValueAsync().ContinueWith(task =>
+      if (childSnapshot != null)
+      {
+         string typeName = childSnapshot.Child("typeName").Value.ToString();
+         string uid = childSnapshot.Child("uid").Value.ToString();
+
+         string temp = childSnapshot.Child("position").Child("x").Value.ToString();
+         float x = float.Parse(temp);
+         temp = childSnapshot.Child("position").Child("y").Value.ToString();
+         float y = float.Parse(temp);
+         temp = childSnapshot.Child("position").Child("z").Value.ToString();
+         float z = float.Parse(temp);
+         Debug.Log("GETTING FIREBASE VALUES: typeName: " + typeName + " uid: " + uid + " position x: " + x + " y: " + y + " z: " + z);
+         Vector3 position = new Vector3(x, y, z);
+
+         temp = childSnapshot.Child("rotation").Child("x").Value.ToString();
+         x = float.Parse(temp);
+         temp = childSnapshot.Child("rotation").Child("y").Value.ToString();
+         y = float.Parse(temp);
+         temp = childSnapshot.Child("rotation").Child("z").Value.ToString();
+         z = float.Parse(temp);
+         Debug.Log("GETTING FIREBASE VALUES position:" + " x: " + x + " y: " + y + " z: " + z);
+
+         Vector3 rotation = new Vector3(x, y, z);
+         spawner.loadMnemonic(typeName, uid, position, rotation);
+         Debug.Log(spawner.spawnedObjects.Count.ToString());
+      }
+   }
+
+   void HandleChildAdded(object sender, ChildChangedEventArgs args)
+   {
+      Debug.Log("CALLED HANDLE CHILD ADDED FUNCTION");
+      //only if someone else adds object
+      if (args.DatabaseError != null)
+      {
+         Debug.LogError(args.DatabaseError.Message);
+         return;
+      }
+      // Do something with the data in args.Snapshot
+      if (args != null)
+      {
+         loadSnapshotUniqueGameObjects(args.Snapshot);
+      }
+   }
+
+   public void loadDatabaseUniqueGameObjectsOnce()
+   {
+      ObjectSpawner spawner = GetComponent<ObjectSpawner>();
+
+      FirebaseDatabase.DefaultInstance.GetReference("Users").Child(spawner.palaceUserID).Child("palace").GetValueAsync().ContinueWith(task =>
       {
          if (task.IsFaulted)
          {
@@ -118,35 +171,15 @@ public class FirebaseHandler : MonoBehaviour
             DataSnapshot snapshot = task.Result;
             if (snapshot != null && snapshot.ChildrenCount > 0)
             {
-               foreach (DataSnapshot childSnapshot in snapshot.Children)   
+               foreach (DataSnapshot childSnapshot in snapshot.Children)
                {
-                  string typeName = childSnapshot.Child("typeName").Value.ToString();
-
-                  string temp = childSnapshot.Child("uid").Value.ToString();
-                  int uid = int.Parse(temp);
-
-                  temp = childSnapshot.Child("position").Child("x").Value.ToString();
-                  float x = float.Parse(temp);
-                  temp = childSnapshot.Child("position").Child("y").Value.ToString();
-                  float y = float.Parse(temp);
-                  temp = childSnapshot.Child("position").Child("z").Value.ToString();
-                  float z = float.Parse(temp);
-                  Debug.Log("GETTING FIREBASE VALUES: typeName: " + typeName + " uid: " + uid + " position x: " + x + " y: " + y + " z: " + z);
-                  Vector3 position = new Vector3(x, y, z);
-
-                  temp = childSnapshot.Child("rotation").Child("x").Value.ToString();
-                  x = float.Parse(temp);
-                  temp = childSnapshot.Child("rotation").Child("y").Value.ToString();
-                  y = float.Parse(temp);
-                  temp = childSnapshot.Child("rotation").Child("z").Value.ToString();
-                  z = float.Parse(temp);
-                  Debug.Log("GETTING FIREBASE VALUES position:" + " x: " + x + " y: " + y + " z: " + z);
-
-                  Vector3 rotation = new Vector3(x, y, z);
-                  spawner.loadMnemonic(typeName, uid, position, rotation);
+                  loadSnapshotUniqueGameObjects(childSnapshot);
                }
             }
          }
       });
    }
 }
+
+
+        
