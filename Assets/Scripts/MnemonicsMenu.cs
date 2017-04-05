@@ -14,11 +14,19 @@ public class MnemonicsMenu : MonoBehaviour {
     private string curCategoryName;
     private DirectoryInfo[] categoryDirectory;
     private DirectoryInfo menuPath;
+    private FileInfo[] prefabFileInfo0;
+    private FileInfo[] prefabFileInfo1;
+    private FileInfo[] prefabFileInfo2;
+    private FileInfo[] prefabFileInfo3;
+    private FileInfo[] prefabFileInfo4;
+    private UnityEngine.Object object1;
+    private int curCategoryNum;
+    GameObject currentDisplayedPrefab;
 
     // Use this for initialization
     void Start () {
         //variable initialization
-        curMnemonicNum = -1;
+        curMnemonicNum = 0;
         curCategoryPageNum = 0; // 0 1 2 3 and so on
 
         setMenuDirectoryPath();
@@ -26,16 +34,47 @@ public class MnemonicsMenu : MonoBehaviour {
         getCategoriesInfo();
         getFilesInfo();
         updateCategoryCubeNames();
+        
     }
 
     private void getFilesInfo() {
         //FileInfo[] fileInfo = levelDirectoryPath.GetFiles("*.*", SearchOption.AllDirectories);
-        int categoryCubeNum = 0;
-        for (categoryCubeNum = 0; categoryCubeNum < numOfCategoriesBeingDisplayed; categoryCubeNum++) {
-            Debug.Log("path: " + categoryDirectory[getCategoryNumOffset() + categoryCubeNum]);
-        } 
+        //  int categoryCubeNum;
+        //for (categoryCubeNum = 0; categoryCubeNum < numOfCategoriesBeingDisplayed; categoryCubeNum++) {
+        //Debug.Log("path: " + categoryDirectory[getCategoryNumOffset() + categoryCubeNum]);
+
+        int numCategories = getNumOfCategoriesInCurrentPage();
+        if (numCategories>0) {
+            Debug.Log("numCategories>0");
+            prefabFileInfo0 = categoryDirectory[getCategoryNumOffset() + 0].GetFiles("*.prefab");
+            //Debug.Log("getFiles:" + categoryDirectory[getCategoryNumOffset() + 0].GetFiles("*.prefab"));
+        }
+        if (numCategories>1) {
+          //  Debug.Log("getFilesInfo");
+            prefabFileInfo1 = categoryDirectory[getCategoryNumOffset() + 1].GetFiles("*.prefab");
+        }
+        if (numCategories > 2) {
+           // Debug.Log("getFilesInfo");
+            prefabFileInfo2 = categoryDirectory[getCategoryNumOffset() + 2].GetFiles("*.prefab");
+        }
+        if (numCategories > 3) {
+          //  Debug.Log("getFilesInfo");
+            prefabFileInfo3 = categoryDirectory[getCategoryNumOffset() + 3].GetFiles("*.prefab");
+        }
+        if (numCategories > 4) {
+         //   Debug.Log("getFilesInfo");
+            prefabFileInfo4 = categoryDirectory[getCategoryNumOffset() + 4].GetFiles("*.prefab");
+        }
+
+        //}
         
-//        FileInfo[] mnemonicFile = ;
+         foreach (FileInfo file in prefabFileInfo0) {
+            Debug.Log("file: " + file.Name);
+            
+            //fileInfo[categoryCubeNum] = categoryDirectory[getCategoryNumOffset() + categoryCubeNum].GetFiles("*.prefab");
+        }
+        
+        //        FileInfo[] mnemonicFile = ;
     }
 
     // Update is called once per frame
@@ -47,6 +86,7 @@ public class MnemonicsMenu : MonoBehaviour {
         //Object object1 = Resources.Load("Menu/Animals/Elephant");
         Debug.Log("Cube #" + categoryCubeNum.ToString() +" was clicked");
         //clearDisplayArea();
+        curCategoryNum = categoryCubeNum;
         curCategoryName = categoryDirectory[getCategoryNumOffset() + categoryCubeNum].Name;
         Debug.Log(curCategoryName);
         setDisplayAreaTitle();
@@ -54,11 +94,27 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     private void displayMnemonic() {
-        throw new NotImplementedException();
+        FileInfo[] correctPrefab = getCorrectPrefab();
+        // Debug.Log(correctPrefab[curMnemonicNum].ToString());
+        Debug.Log("displayMnemonics curMnemonicNum: " + "/Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name) );
+        object1 = Resources.Load("Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
+        Debug.Log(object1);
+        GameObject currentDisplayedPrefab = Instantiate(object1, this.gameObject.transform) as GameObject;
+        
+    }
+
+    private FileInfo[] getCorrectPrefab() {
+        switch (curCategoryNum) {
+            case 0: return prefabFileInfo0;
+            case 1: return prefabFileInfo1;
+            case 2: return prefabFileInfo2;
+            case 3: return prefabFileInfo3;
+            default: return prefabFileInfo0;
+        }
     }
 
     private void setDisplayAreaTitle() {
-        Debug.Log(gameObject.GetComponentInChildren<Text>().text = curCategoryName);
+        gameObject.GetComponentInChildren<Text>().text = curCategoryName;
     }
 
     public void getCategoriesInfo() {
@@ -94,11 +150,21 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     private void updateCategoryCubeNames() {
-        GameObject.Find("CategoryCube0").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 0].Name;
-        GameObject.Find("CategoryCube1").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 1].Name;
-        GameObject.Find("CategoryCube2").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 2].Name;
-        GameObject.Find("CategoryCube3").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 3].Name;
-        GameObject.Find("CategoryCube4").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 4].Name;
+        int numCategories = getNumOfCategoriesInCurrentPage();
+        if (numCategories>4)
+            GameObject.Find("CategoryCube4").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 4].Name;
+        if (numCategories > 3)
+            GameObject.Find("CategoryCube3").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 3].Name;
+        if (numCategories > 2)
+            GameObject.Find("CategoryCube2").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 2].Name;
+        if (numCategories > 1)
+            GameObject.Find("CategoryCube1").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 1].Name;
+        if (numCategories > 0)
+            GameObject.Find("CategoryCube0").GetComponentInChildren<Text>().text = categoryDirectory[getCategoryNumOffset() + 0].Name;
+    }
+
+    private int getNumOfCategoriesInCurrentPage() {
+        return 4; //HARDCODED
     }
 }
 
