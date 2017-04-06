@@ -19,7 +19,7 @@ public class MnemonicsMenu : MonoBehaviour {
     private UnityEngine.Object curObject;
     private int curCategoryNum;
     private GameObject currentlyDisplayedMenuGameObject;
-
+    private string currentTypeName;
     public string[] categoryNames;
     private UnityEngine.Object[] currentCategoryObjects;
 
@@ -30,6 +30,7 @@ public class MnemonicsMenu : MonoBehaviour {
         curMnemonicNum = 0;
         curCategoryPageNum = 0; // 0 1 2 3 and so on
                                 // SetMenuDirectoryPath();
+        currentTypeName = "";
         SetNumOfCategoriesBeingDisplayed();
         // GetCategoriesInfo();
         //GetFilesInfo();
@@ -46,7 +47,7 @@ public class MnemonicsMenu : MonoBehaviour {
         if (numCategories > 0) {
             Debug.Log("numCategories>0");
             prefabFileInfo0 = categoryDirectory[GetCategoryNumOffset() + 0].GetFiles("*.prefab");
-            Debug.Log("getFiles:" + categoryDirectory[0].GetFiles("*.prefab"));
+            //Debug.Log("getFiles:" + categoryDirectory[getCategoryNumOffset() + 0].GetFiles("*.prefab"));
         }
         if (numCategories > 1) {
             //  Debug.Log("getFilesInfo");
@@ -79,7 +80,7 @@ public class MnemonicsMenu : MonoBehaviour {
     // Update is called once per frame
     private void Update() {/*
         if (GameObject.Find("DisplayAreaTitleText").GetComponent<Text>().text.Equals("")) {
-            Debug.Log("DisplayAreaTitleText is empty");
+           // Debug.Log("DisplayAreaTitleText is empty");
             GameObject.Find("MenuSpawnButton").GetComponent<BoxCollider>().enabled = false;
         } else {
             GameObject.Find("MenuSpawnButton").GetComponent<BoxCollider>().enabled = true;
@@ -113,6 +114,7 @@ public class MnemonicsMenu : MonoBehaviour {
         //Debug.Log(Resources.LoadAll("/Menu/Animals/"));
         //Debug.Log(curObject);
         currentlyDisplayedMenuGameObject = Instantiate(curObject, this.gameObject.transform.GetChild(0).transform) as GameObject;
+        currentTypeName = currentCategoryObjects[curMnemonicNum].name;//TODO: gameStateIntegrate
     }
 
     private FileInfo[] GetCorrectPrefab() {
@@ -244,6 +246,8 @@ public class MnemonicsMenu : MonoBehaviour {
         spawnedGameObject.transform.parent = null;
         DealWithCubes("MenuSpawnButton");
         GameObject.Find("DisplayAreaTitleText").GetComponent<Text>().text = "";
+        ObjectSpawner spawner = GameObject.Find("Player").GetComponent<ObjectSpawner>();
+        spawner.addMnemonicFromMenu(currentTypeName, spawnedGameObject);
     }
 }
 
