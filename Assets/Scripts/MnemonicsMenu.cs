@@ -18,12 +18,14 @@ public class MnemonicsMenu : MonoBehaviour {
     private UnityEngine.Object curObject;
     private int curCategoryNum;
     private GameObject currentlyDisplayedMenuGameObject;
+    private string currentTypeName;
 
     // Use this for initialization
-    private void Start() {
+   private void Start() {
         //variable initialization
         curMnemonicNum = 0;
         curCategoryPageNum = 0; // 0 1 2 3 and so on
+        currentTypeName = "";
         SetMenuDirectoryPath();
         SetNumOfCategoriesBeingDisplayed();
         GetCategoriesInfo();
@@ -72,13 +74,13 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     // Update is called once per frame
-    private void Update() {
+    private void Update() {/*
         if (GameObject.Find("DisplayAreaTitleText").GetComponent<Text>().text.Equals("")) {
-            Debug.Log("DisplayAreaTitleText is empty");
+           // Debug.Log("DisplayAreaTitleText is empty");
             GameObject.Find("MenuSpawnButton").GetComponent<BoxCollider>().enabled = false;
         } else {
             GameObject.Find("MenuSpawnButton").GetComponent<BoxCollider>().enabled = true;
-        }
+        }*/
     }
 
     public void CategoryCubeClicked(int categoryCubeNum) {
@@ -99,6 +101,7 @@ public class MnemonicsMenu : MonoBehaviour {
         Debug.Log("displayMnemonics curMnemonicNum: " + "/Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
         curObject = Resources.Load("Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
         Debug.Log(curObject);
+        currentTypeName = Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name);
         currentlyDisplayedMenuGameObject = Instantiate(curObject, this.gameObject.transform.GetChild(0).transform) as GameObject;
     }
 
@@ -228,6 +231,8 @@ public class MnemonicsMenu : MonoBehaviour {
         spawnedGameObject = currentlyDisplayedMenuGameObject;
         spawnedGameObject.transform.parent = null;
         GameObject.Find("DisplayAreaTitleText").GetComponent<Text>().text = "";
+        ObjectSpawner spawner = GameObject.Find("Player").GetComponent<ObjectSpawner>();
+        spawner.addMnemonicFromMenu(currentTypeName, spawnedGameObject);
     }
 }
 
