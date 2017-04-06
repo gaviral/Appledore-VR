@@ -5,6 +5,7 @@
     android:id="@+id/activity_sign_in"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context="com.vroneinc.vrone.SignInActivity">
 
     <ImageView
@@ -13,13 +14,29 @@
         android:scaleType="fitXY"
         android:src="@drawable/appledore_splash"/>
 
+    <Button
+        android:id="@+id/skipSignInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/skip_sign_in"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:background="@color/signInBlue"
+        android:visibility="gone"
+        android:layout_above="@+id/GoogleSignInButton"
+        android:layout_centerInParent="true"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:layout_marginBottom="25dp"/>
+
     <com.google.android.gms.common.SignInButton
         android:id="@+id/GoogleSignInButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:paddingBottom="70dp"
-        android:paddingLeft="90dp"></com.google.android.gms.common.SignInButton>
+        android:layout_centerInParent="true"
+        android:paddingBottom="70dp"/>
 
 </RelativeLayout>

@@ -109,6 +109,7 @@ public class AuthBaseActivity extends FragmentActivity implements
             }
         } else {
             //what to do if the sign in was not a success
+
         }
     }
 
@@ -124,5 +125,14 @@ public class AuthBaseActivity extends FragmentActivity implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
+    }
+
+    // Helper method for the extending classes to call on back press
+    protected void backPressGoHome() {
+        //go to home screen and clear back stack
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

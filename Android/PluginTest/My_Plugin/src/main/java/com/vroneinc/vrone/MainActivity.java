@@ -1,19 +1,26 @@
 package com.vroneinc.vrone;
 
+import android.*;
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,29 +30,20 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Set;
 
 public class MainActivity extends AuthBaseActivity {
-    // Code for BT permission
-    //private final static int REQUEST_ENABLE_BT = 87;
-
     private Context mContext;
     private Resources mResources;
-
-
-    // a bluetooth “socket” to a bluetooth device
-    /*private BluetoothSocket mmSocket = null;
-    // input/output “streams” with which we can read and write to device
-    // use of “static” important, it means variables can be accessed
-    // without an object, this is useful as other activities can use
-    // these streams to communicate after they have been opened.
-    public static InputStream mmInStream = null;
-    public static OutputStream mmOutStream = null;
-    // indicates if we are connected to a device
-    private boolean Connected = false;*/
 
     private static final String TAG = "MainActivity";
 
@@ -53,8 +51,10 @@ public class MainActivity extends AuthBaseActivity {
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
-    private static final int REQUEST_IMAGE_CAPTURE = 4;
+    private static final int REQUEST_ENABLE_GALLERY = 4;
     private static final int REQUEST_ENABLE_CAMERA = 5;
+    private static final int REQUEST_CAMERA_ACTIVITY = 6;
+    private static final int REQUEST_GALLERY_ACTIVITY = 7;
 
     /**
      * Name of the connected device
@@ -73,6 +73,7 @@ public class MainActivity extends AuthBaseActivity {
     // UI buttons
     private Button unityButton;
     private Button forumButton;
+    private Button cameraButton;
     private Button findButton;
 
     // User id
@@ -80,6 +81,10 @@ public class MainActivity extends AuthBaseActivity {
     private static boolean mUserIdSent = false;
 
     private GoogleApiClient mGoogleApiClient;
+
+    private volatile int mFileIndex = 0;
+
+    private StorageReference mStorage;
 
 
     @Override
@@ -94,8 +99,6 @@ public class MainActivity extends AuthBaseActivity {
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mGso)
                 .build();
-
-        // TODO action bar in Unity text is vrone (make it VR-One)
 
         // Initialize bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -124,11 +127,11 @@ public class MainActivity extends AuthBaseActivity {
         });
 
         // add listener for camera button
-        forumButton = (Button) findViewById(R.id.camerabutton);
-        forumButton.setOnClickListener(new View.OnClickListener() {
+        cameraButton = (Button) findViewById(R.id.camerabutton);
+        cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchTakePictureIntent(v);
+                openCameraMenu();
             }
         });
 
@@ -141,6 +144,8 @@ public class MainActivity extends AuthBaseActivity {
                 startActivity(intent);
             }
         });
+
+        mStorage = FirebaseStorage.getInstance().getReference();
     }
 
 
@@ -163,11 +168,6 @@ public class MainActivity extends AuthBaseActivity {
                 connectDevice(true);
             }
         }
-
-    }
-
-    public void signOut() {
-        super.signOut(mGoogleApiClient);
     }
 
     @Override
@@ -243,22 +243,6 @@ public class MainActivity extends AuthBaseActivity {
         }*/
     }
 
-    // Static method to send the user id to controller via Bluetooth
-    public static void sendUserIdToController() {
-        if (!mUserIdSent) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null && mBluetoothListener != null) {
-                mUserId = user.getUid();
-                // add a null terminator to the end
-                // (so the controller knows when to stop
-                mUserId += "\0";
-                byte send[] = mUserId.getBytes();
-                mBluetoothListener.write(send);
-                mUserIdSent = true;
-            }
-        }
-    }
-
     /**
      * The Handler that gets information back from the BluetoothChatService
      */
@@ -281,10 +265,7 @@ public class MainActivity extends AuthBaseActivity {
                     }
                     break;
                 case BluetoothListener.Constants.MESSAGE_WRITE:
-                    /*byte[] writeBuf = (byte[]) msg.obj;
-                    // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
-                    mConversationArrayAdapter.add("Me:  " + writeMessage);*/
+                    // nothing needed on Android side
                     break;
                 case BluetoothListener.Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
@@ -342,8 +323,21 @@ public class MainActivity extends AuthBaseActivity {
                             Toast.LENGTH_SHORT).show();
                     this.finish();
                 }
+                break;
+            // handle return of camera intent
+            case REQUEST_CAMERA_ACTIVITY:
+                if (resultCode == Activity.RESULT_OK) {
+                    uploadNewImage(data);
+                }
+                break;
+            case REQUEST_GALLERY_ACTIVITY:
+                if (resultCode == Activity.RESULT_OK) {
+                    uploadNewImage(data);
+                }
+                break;
         }
     }
+
 
     /*
      * Function to get the paired device, this is for calling after BT is enabled
@@ -400,7 +394,7 @@ public class MainActivity extends AuthBaseActivity {
     }
 
     //  when the camera start button is pressed
-    private void dispatchTakePictureIntent(View v) {
+    private void dispatchTakePictureIntent() {
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startCameraIntent();
         }
@@ -409,14 +403,138 @@ public class MainActivity extends AuthBaseActivity {
         }
     }
 
+    //  when the camera start button is pressed
+    private void dispatchOpenGalleryIntent() {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            startGalleryIntent();
+        }
+        else {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_ENABLE_GALLERY);
+        }
+    }
+
     private void startCameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CAMERA_ACTIVITY);
+    }
+
+    private void startGalleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, REQUEST_GALLERY_ACTIVITY);
+    }
+
+    private void openCameraMenu() {
+        final CharSequence[] items = { mResources.getString(R.string.take_photo),
+                mResources.getString(R.string.open_gallery),
+                mResources.getString(R.string.cancel)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(mResources.getString(R.string.camera_action));
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (items[which].equals(mResources.getString(R.string.take_photo))) {
+                    dispatchTakePictureIntent();
+                }
+                else if (items[which].equals(mResources.getString(R.string.open_gallery))) {
+                    dispatchOpenGalleryIntent();
+                }
+                else if (items[which].equals(mResources.getString(R.string.cancel))) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    // Method to upload a new image to Firebase storage, for retrieving from Unity
+    private void uploadNewImage(Intent data) {
+        final Uri file = data.getData();
+        getAvailableFileName(new FetchDataCallback() {
+            @Override
+            public void onDataFetched() {
+                sendImageToFirebase(file);
+            }
+        });
+        Toast.makeText(getApplicationContext(), mResources.getString(R.string.uploading), Toast.LENGTH_LONG).show();
+    }
+
+    // Recursive helper function for finding an available filename
+    private void getAvailableFileName(final FetchDataCallback callback) {
+        Task<Uri> searchTask = mStorage.child(mResources.getString(R.string.storage_template, mFileIndex)).getDownloadUrl();
+        searchTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // If failed, that means the file does not exist, so we call callback
+                callback.onDataFetched();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // if successful, that means a file was found, so increment index
+                mFileIndex++;
+                // Recursive call until we fail to find a file
+                getAvailableFileName(callback);
+            }
+        });
+    }
+
+    // This is called from the callback function to upload the file to Firebase storage
+    private void sendImageToFirebase(Uri file) {
+        StorageReference fileRef = mStorage.child(mResources.getString(R.string.storage_template, mFileIndex));
+        UploadTask uploadTask = fileRef.putFile(file);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast toast = Toast.makeText(getApplicationContext(), mResources.getString(R.string.upload_fail), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast toast = Toast.makeText(getApplicationContext(), mResources.getString(R.string.upload_success), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+
+    }
+
+    public void signOut() {
+        super.signOut(mGoogleApiClient);
+    }
+
+    // Static method to send the user id to controller via Bluetooth
+    public static void sendUserIdToController() {
+        if (!mUserIdSent) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null && mBluetoothListener != null) {
+                mUserId = user.getUid();
+                // add a null terminator to the end
+                // (so the controller knows when to stop)
+                mUserId += "\0";
+                byte send[] = mUserId.getBytes();
+                mBluetoothListener.write(send);
+                mUserIdSent = true;
+            }
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
+            case REQUEST_ENABLE_GALLERY: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startGalleryIntent();
+                } else {
+                    Toast toast = Toast.makeText(mContext, getResources().getString(R.string.gallery_denied_toast), Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                return;
+            }
             case REQUEST_ENABLE_CAMERA: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -427,7 +545,17 @@ public class MainActivity extends AuthBaseActivity {
                 }
                 return;
             }
-            // TODO other possible permissions here
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            backPressGoHome();
+        }
+        else {
+            // if signed in as anonymous, go back to SignInActivity
+            super.onBackPressed();
         }
     }
 
