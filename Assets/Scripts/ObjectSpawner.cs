@@ -54,11 +54,11 @@ public class ObjectSpawner : MonoBehaviour {
     }
 
     private void Awake() {
-        //mainClass = new AndroidJavaClass("com.vroneinc.vrone.PalaceSelectionActivity");
-        // userID = mainClass.CallStatic<string>("getCurUserId");
-        // palaceUserID = mainClass.CallStatic<string>("getCurPalaceUserId");
-        userID = "OfGU9MONj7PiIinOJWUVbknfIpE2";
-        palaceUserID = "jnPhEjWfVEMI68T0tITXnZnerc92";
+        mainClass = new AndroidJavaClass("com.vroneinc.vrone.PalaceSelectionActivity");
+        userID = mainClass.CallStatic<string>("getCurUserId");
+        palaceUserID = mainClass.CallStatic<string>("getCurPalaceUserId");
+        //userID = "OfGU9MONj7PiIinOJWUVbknfIpE2";
+        //palaceUserID = "jnPhEjWfVEMI68T0tITXnZnerc92";
 
         placeMnemonicMode = true;
         //mnemonicDict = new Dictionary<string, GameObject>();
