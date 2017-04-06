@@ -140,8 +140,13 @@ public class MainActivity extends AuthBaseActivity {
         findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                 Intent intent = new Intent(getApplication(), MapActivity.class);
                 startActivity(intent);
+            }
+            else {
+                Toast.makeText(mContext, mResources.getString(R.string.sign_in_required), Toast.LENGTH_SHORT).show();
+            }
             }
         });
 
