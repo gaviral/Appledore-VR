@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.css" />
+  <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+  <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.js"></script>
+    <meta charset="utf-8">
+    <title>Welcome to Firebase Hosting</title>
+    <style media="screen">
+      body {
+        font-family: Roboto, Arial, sans-serif;
+        
+      }
+
+      a {
+        color: rgb(3,155,229);
+      }
+
+      #message {
+        max-width: 400px;
+        margin: 40px auto;
+        box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2),0 1px 1px 0 rgba(0,0,0,0.14),0 2px 1px -1px rgba(0,0,0,0.12);
+        border-radius: 2px;
+        background: white;
+        padding: 16px 24px;
+      }
+
+      #message h1 {
+        font-size: 22px;
+        font-weight: 500;
+        text-align: center;
+        margin: 0 0 16px;
+      }
+
+      #message p {
+        font-weight: 300;
+        line-height: 150%;
+      }
+
+      #message ul {
+        list-style: none;
+        margin: 16px 0 0;
+        padding: 0;
+        text-align: center;
+      }
+
+      #message li a {
+        display: inline-block;
+        padding: 8px;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-weight: 500;
+        background: rgb(3,155,229);
+        color: white;
+        border: 1px solid rgb(3,155,229);
+        border-radius: 3px;
+        font-size: 14px;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+
+      img {
+	  horizontal-align: center;
+  max-width: 100%; /* This rule is very important, please do not ignore this! */
+}
+      }
+    </style>
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <div id="message">
+      <img src="AppledoreVR_logo.png" height="400" >
+     <!-- <p align="center">It's time to take language learning to the next level!</p> -->
+     <input type="file" onchange="previewFile()"><br>
+     
+      
+    </div>
+<img align="center" id="cropthisimage" src="" height="200" alt="Image preview...">
+    
+
+
+<script>
+var fileNameNum;
+var file;
+	function previewFile() {
+		var preview = document.querySelector('#cropthisimage'); //selects the query named img
+		file = document.querySelector('input[type=file]').files[0]; //sames as here
+		var reader = new FileReader();
+		fileNameNum = 0;
+		var fileName = "";
+
+		reader.onloadend = function() {
+			preview.src = reader.result;
+		}
+
+		if (file) {
+			console.log(file);
+			var d = new Date();
+			var n = d.getTime();
+			reader.readAsDataURL(file); //reads the data as a URL
+			firebase.storage().ref().child("snippedImages/" + fileNameNum.toString() + ".PNG").getDownloadURL().then(function (){
+					fileFound();
+				}, function (){
+					var uploadTask = firebase.storage().ref().child("snippedImages/" + fileNameNum.toString() + ".PNG").put(file);
+					console.log("uploaded: " + uploadTask.toString());
+				}
+			);			
+		} else {
+			preview.src = "";
+		}
+	}
+
+	previewFile(); //calls the function named previewFile()
+	
+	
+
+	function fileFound(foundURL) {
+		//stuff
+		console.log(fileNameNum++);
+		firebase.storage().ref().child("snippedImages/" + fileNameNum.toString() + ".PNG").getDownloadURL().then(function (){
+						fileFound();
+					}, function (){
+						var uploadTask = firebase.storage().ref().child("snippedImages/" + fileNameNum.toString() + ".PNG").put(file);
+						console.log("uploaded: " + uploadTask.toString());
+						
+					}
+				);
+	}
+	
+  </script>   
+<script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDNJaVmPTCGUKNV-uCp8Fj4_cuLTN7sf_8",
+    authDomain: "vr-one-4e3bb.firebaseapp.com",
+    databaseURL: "https://vr-one-4e3bb.firebaseio.com",
+    storageBucket: "vr-one-4e3bb.appspot.com",
+    messagingSenderId: "620672971561"
+  };
+  firebase.initializeApp(config);
+</script>
+<script type="text/javascript">
+    
+
+      var storageRef = firebase.storage().ref();
+/*
+      $('#cropthisimage').cropper({
+        crop: function(e) {
+          // Output the result data for cropping image.
+          console.log(e.x);
+          console.log(e.y);
+          console.log(e.width);
+          console.log(e.height);
+          console.log(e.rotate);
+          console.log(e.scaleX);
+          console.log(e.scaleY);
+        }
+      });
+
+      $("#send").click(function() {
+        $("#cropthisimage").cropper('getCroppedCanvas').toBlob(function(blob) {
+
+          var d = new Date();
+          var n = d.getTime();
+          //console.log("time:" + n);
+          var uploadTask = firebase.storage().ref().child('uploadedImages/' + "testing12" + n).put(blob);
+        });
+      });
+      */
+    </script>
+    
+  </body>
+</html>
