@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
@@ -31,11 +32,15 @@ public class SignInActivity extends AuthBaseActivity implements View.OnClickList
     private static final String TAG = "SignInActivity";
 
     //Class variables for authentication
-    private SignInButton signInButton;
+    private SignInButton mSignInButton;
+    private Button mSkipButton;
     private GoogleApiClient mGoogleApiClient;
     private RelativeLayout mContentView;
 
+    private int mFailedAttempt = 0;
+
     private static final int GoogleSignInButton = R.id.GoogleSignInButton;
+    private static final int SkipSignInButton = R.id.skipSignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +53,14 @@ public class SignInActivity extends AuthBaseActivity implements View.OnClickList
         Window window = getWindow();
         window.setStatusBarColor(BLACK);
 
-        signInButton = (SignInButton) findViewById(R.id.GoogleSignInButton);
-        signInButton.setOnClickListener(this);
+        mSignInButton = (SignInButton) findViewById(R.id.GoogleSignInButton);
+        mSignInButton.setOnClickListener(this);
 
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-        signInButton.setColorScheme(SignInButton.COLOR_DARK);
+        mSkipButton = (Button) findViewById(R.id.skipSignInButton);
+        mSkipButton.setOnClickListener(this);
+
+        mSignInButton.setSize(SignInButton.SIZE_WIDE);
+        mSignInButton.setColorScheme(SignInButton.COLOR_DARK);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -106,29 +114,19 @@ public class SignInActivity extends AuthBaseActivity implements View.OnClickList
         //switch (v.getId()) {
         if (v.getId() == GoogleSignInButton){
             //case GoogleSignInButton: {
-                if(isNetworkAvailable(this)) {
-                    signIn();
-                } else {
-                    // TODO handle this case
-                    /*AlertDialog.Builder builder = new AlertDialog.Builder(
-                            new ContextThemeWrapper(this, R.style.Theme_AppCompat_Light_Dialog));
-
-                    builder.setMessage(getString(R.string.no_internet_message))
-                            .setTitle(getString(R.string.no_internet_title))
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    AlertDialog signInDialog = builder.create();
-                    signInDialog.setCanceledOnTouchOutside(true);
-
-                    signInDialog.show();*/
-
-                }
+            if(isNetworkAvailable(this)) {
+                signIn();
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.network_unavailable_toast), Toast.LENGTH_SHORT);
+                toast.show();
+            }
                 //break;
             //}
+        }
+        else if (v.getId() == SkipSignInButton) {
+            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -169,8 +167,11 @@ public class SignInActivity extends AuthBaseActivity implements View.OnClickList
         if(result.isSuccess()){
             Intent intent = new Intent(this, MainActivity.class);
             super.handleSignInResult(result, intent);
-        } else{
+        } else {
             Log.i("Result", "Not successful");
+            if (mSkipButton.getVisibility() == View.GONE && mFailedAttempt > 0)
+                mSkipButton.setVisibility(View.VISIBLE);
+            mFailedAttempt++;
         }
     }
 
@@ -198,11 +199,8 @@ public class SignInActivity extends AuthBaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed(){
-        //go to home screen and clear back stack
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        super.onBackPressed();
+        backPressGoHome();
     }
 
 }

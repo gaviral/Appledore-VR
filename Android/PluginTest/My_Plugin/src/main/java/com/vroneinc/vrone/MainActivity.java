@@ -163,7 +163,6 @@ public class MainActivity extends AuthBaseActivity {
                 connectDevice(true);
             }
         }
-
     }
 
     public void signOut() {
@@ -250,7 +249,7 @@ public class MainActivity extends AuthBaseActivity {
             if (user != null && mBluetoothListener != null) {
                 mUserId = user.getUid();
                 // add a null terminator to the end
-                // (so the controller knows when to stop
+                // (so the controller knows when to stop)
                 mUserId += "\0";
                 byte send[] = mUserId.getBytes();
                 mBluetoothListener.write(send);
@@ -428,6 +427,17 @@ public class MainActivity extends AuthBaseActivity {
                 return;
             }
             // TODO other possible permissions here
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            backPressGoHome();
+        }
+        else {
+            // if signed in as anonymous, go back to SignInActivity
+            super.onBackPressed();
         }
     }
 

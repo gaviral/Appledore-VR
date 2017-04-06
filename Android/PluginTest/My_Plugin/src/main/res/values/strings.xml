@@ -3,6 +3,7 @@
     <string name="start_forum">Start Forum</string>
     <string name="start_camera">Camera</string>
     <string name="find_controller">Controller</string>
+    <string name="skip_sign_in">Skip Sign In</string>
     <string name="app_name">VR-One</string>
     <string name="sign_out">Sign Out</string>
     <string name="toggle_bluetooth">Toggle Bluetooth</string>
@@ -42,5 +43,6 @@
     <string name="bt_not_enabled">Bluetooth not enabled</string>
     <string name="bt_device_name">Team17</string>
     <string name="database_controller_location">Users/%1$s/Controller/location</string>
+    <string name="network_unavailable_toast">Network connectivity is required for this feature</string>
     <integer name="google_play_services_version">10298000</integer>
 </resources>
