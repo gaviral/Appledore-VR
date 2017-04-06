@@ -46,7 +46,9 @@ public class PalaceAdapter extends ArrayAdapter<User> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.palaceTitle.setText(user.getUid());
+        //viewHolder.palaceTitle.setText(user.getUid());
+        // Prototype version (for the demo) TODO change later
+        viewHolder.palaceTitle.setText("Palace " + Integer.toString(position+1));
         viewHolder.palaceUser.setText(user.getName());
 
         // Return the completed view

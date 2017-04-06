@@ -1,6 +1,7 @@
 <resources>
+    <integer name="google_play_services_version">10298000</integer>
     <string name="start_unity">Start Unity</string>
-    <string name="start_forum">Start Forum</string>
+    <string name="start_forum">Forum</string>
     <string name="start_camera">Camera</string>
     <string name="find_controller">Controller</string>
     <string name="skip_sign_in">Skip Sign In</string>
@@ -38,11 +39,19 @@
     <string name="views_topic_adapter">Views: %1$s</string>
     <string name="sign_out_text">Signed Out Successfully</string>
     <string name="camera_denied_toast">Camera permission is needed to use this feature</string>
+    <string name="gallery_denied_toast">External storage permission is needed to use this feature</string>
     <string name="palace_selection_title_ab">Please select a palace:</string>
     <string name="bt_connected_message">Connected to %1$s</string>
     <string name="bt_not_enabled">Bluetooth not enabled</string>
     <string name="bt_device_name">Team17</string>
     <string name="database_controller_location">Users/%1$s/Controller/location</string>
     <string name="network_unavailable_toast">Network connectivity is required for this feature</string>
-    <integer name="google_play_services_version">10298000</integer>
+    <string name="take_photo">Take Photo</string>
+    <string name="open_gallery">Choose from Gallery</string>
+    <string name="cancel">Cancel</string>
+    <string name="camera_action">Choose an action</string>
+    <string name="storage_template">snippedImages/%1$d.PNG</string>
+    <string name="upload_fail">Upload failed</string>
+    <string name="upload_success">Upload successful</string>
+    <string name="uploading">Uploading, please wait...</string>
 </resources>
