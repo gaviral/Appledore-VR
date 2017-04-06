@@ -17,6 +17,8 @@
 #include "adc.h"
 
 #define BLUETOOTH_RECEIVE_SIZE 40
+#define SKIP_USER_ID 1
+#define TEST_ID "testid"
 
 /*
  * To create a screen add it bellow
@@ -44,7 +46,7 @@ int main() {
 
 	// user_id to be stored for http patch
 	char user_id[BLUETOOTH_RECEIVE_SIZE]; // allocate 40 characters for it
-	user_id[0] = '\0';
+	strcpy(user_id, TEST_ID);
 
 	int press;
 	char command[MAX_CMD_SIZE];
@@ -61,9 +63,17 @@ int main() {
 
 	/* USER ID RETRIEVING CODE */
 	// This will block until we receive a (hopefully valid) user id, and a null character from bluetooth
-	bt_read_command(user_id);
-	printf("\nGot user id:%s\n", user_id);
-	send_gps_data(user_id);
+	if(SKIP_USER_ID) {
+		printf("Skipping user id\n");
+	}
+	else {
+		// sometimes we get an erroneous empty string returned, so if that's the case just keep waiting
+		while(user_id[0] == '\0' || strcmp(user_id, TEST_ID) == 0) {
+			bt_read_command(user_id);
+			printf("\nGot user id:%s\n", user_id);
+		}
+		send_gps_data(user_id);
+	}
 
 	/* Main while loop */
 	while(1) {
