@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,15 +20,19 @@ public class MnemonicsMenu : MonoBehaviour {
     private int curCategoryNum;
     private GameObject currentlyDisplayedMenuGameObject;
 
+    public string[] categoryNames;
+    private UnityEngine.Object[] currentCategoryObjects;
+
     // Use this for initialization
     private void Start() {
+        Debug.Log("BLAH" + Resources.Load("Menu/Animals/SPIDER").name);
         //variable initialization
         curMnemonicNum = 0;
         curCategoryPageNum = 0; // 0 1 2 3 and so on
-        SetMenuDirectoryPath();
+                                // SetMenuDirectoryPath();
         SetNumOfCategoriesBeingDisplayed();
-        GetCategoriesInfo();
-        GetFilesInfo();
+        // GetCategoriesInfo();
+        //GetFilesInfo();
         UpdateCategoryCubeNames();
     }
 
@@ -41,7 +46,7 @@ public class MnemonicsMenu : MonoBehaviour {
         if (numCategories > 0) {
             Debug.Log("numCategories>0");
             prefabFileInfo0 = categoryDirectory[GetCategoryNumOffset() + 0].GetFiles("*.prefab");
-            //Debug.Log("getFiles:" + categoryDirectory[getCategoryNumOffset() + 0].GetFiles("*.prefab"));
+            Debug.Log("getFiles:" + categoryDirectory[0].GetFiles("*.prefab"));
         }
         if (numCategories > 1) {
             //  Debug.Log("getFilesInfo");
@@ -72,13 +77,14 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     // Update is called once per frame
-    private void Update() {
+    private void Update() {/*
         if (GameObject.Find("DisplayAreaTitleText").GetComponent<Text>().text.Equals("")) {
             Debug.Log("DisplayAreaTitleText is empty");
             GameObject.Find("MenuSpawnButton").GetComponent<BoxCollider>().enabled = false;
         } else {
             GameObject.Find("MenuSpawnButton").GetComponent<BoxCollider>().enabled = true;
         }
+        */
     }
 
     public void CategoryCubeClicked(int categoryCubeNum) {
@@ -86,19 +92,26 @@ public class MnemonicsMenu : MonoBehaviour {
         Debug.Log("Cube #" + categoryCubeNum.ToString() + " was clicked");
         ClearDisplayArea();
         curCategoryNum = categoryCubeNum;
-        curCategoryName = categoryDirectory[GetCategoryNumOffset() + categoryCubeNum].Name;
+        curCategoryName = categoryNames[GetCategoryNumOffset() + categoryCubeNum];
         Debug.Log(curCategoryName);
         SetDisplayAreaTitle();
+        LoadCurrentCategory();
         DisplayMnemonic();
     }
 
+    private void LoadCurrentCategory() {
+        currentCategoryObjects = Resources.LoadAll("Menu/" + curCategoryName + "/");
+    }
+
     private void DisplayMnemonic() {
-        FileInfo[] correctPrefab = GetCorrectPrefab();
+        //FileInfo[] correctPrefab = GetCorrectPrefab();
         // Debug.Log(correctPrefab[curMnemonicNum].ToString());
         Debug.Log(curMnemonicNum);
-        Debug.Log("displayMnemonics curMnemonicNum: " + "/Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
-        curObject = Resources.Load("Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
-        Debug.Log(curObject);
+        // Debug.Log("displayMnemonics curMnemonicNum: " + "/Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
+        //curObject = Resources.Load("Menu/" + curCategoryName + "/" + Path.GetFileNameWithoutExtension(correctPrefab[curMnemonicNum].Name));
+        curObject = currentCategoryObjects[curMnemonicNum];
+        //Debug.Log(Resources.LoadAll("/Menu/Animals/"));
+        //Debug.Log(curObject);
         currentlyDisplayedMenuGameObject = Instantiate(curObject, this.gameObject.transform.GetChild(0).transform) as GameObject;
     }
 
@@ -118,13 +131,13 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     public void GetCategoriesInfo() {
-        categoryDirectory = menuPath.GetDirectories();
+        /*categoryDirectory = menuPath.GetDirectories();
         numOfCategories = categoryDirectory.Length;
-        Debug.Log("Number of Category Directories: " + numOfCategories);
+        Debug.Log("Number of Category Directories: " + numOfCategories);*/
     }
 
     public void SetMenuDirectoryPath() {
-        menuPath = new DirectoryInfo("Assets/Resources/Menu/");
+        menuPath = new DirectoryInfo(Application.dataPath + "/Resources/Menu/");
     }
 
     public void ClearDisplayArea() {
@@ -132,6 +145,7 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     public void DealWithCubes(string sentBy) {
+        DestroyCurrentlyDisplayedPrefab();
         if (sentBy.Equals("MenuSpawnButton")) {
             Debug.Log("Sent by Spawn Button");
             GameObject.Find("MenuButton").GetComponent<Toggle>().isOn = false;
@@ -143,6 +157,7 @@ public class MnemonicsMenu : MonoBehaviour {
             GameObject.Find("CategoryCube3").GetComponent<MeshRenderer>().enabled = true;
             GameObject.Find("CategoryCube4").GetComponent<MeshRenderer>().enabled = true;
             GameObject.Find("MenuSpawnButton").GetComponent<MeshRenderer>().enabled = true;
+            DisplayMnemonic();
         } else {
             GameObject.Find("CategoryCube0").GetComponent<MeshRenderer>().enabled = false;
             GameObject.Find("CategoryCube1").GetComponent<MeshRenderer>().enabled = false;
@@ -166,7 +181,7 @@ public class MnemonicsMenu : MonoBehaviour {
     }
 
     public void SetNumOfCategoriesBeingDisplayed() {
-        numOfCategoriesBeingDisplayed = 5;
+        numOfCategoriesBeingDisplayed = categoryNames.Length;
     }
 
     public void NextCategoryPage() {
@@ -194,7 +209,7 @@ public class MnemonicsMenu : MonoBehaviour {
 
     private void IncrementCurMnemonicNum() {
         curMnemonicNum++;
-        if (curMnemonicNum == GetCorrectPrefab().Length)
+        if (curMnemonicNum == currentCategoryObjects.Length)
             curMnemonicNum--;
     }
 
@@ -208,25 +223,26 @@ public class MnemonicsMenu : MonoBehaviour {
     private void UpdateCategoryCubeNames() {
         int numCategories = GetNumOfCategoriesInCurrentPage();
         if (numCategories > 4)
-            GameObject.Find("CategoryCube4").GetComponentInChildren<Text>().text = categoryDirectory[GetCategoryNumOffset() + 4].Name;
+            GameObject.Find("CategoryCube4").GetComponentInChildren<Text>().text = categoryNames[GetCategoryNumOffset() + 4];
         if (numCategories > 3)
-            GameObject.Find("CategoryCube3").GetComponentInChildren<Text>().text = categoryDirectory[GetCategoryNumOffset() + 3].Name;
+            GameObject.Find("CategoryCube3").GetComponentInChildren<Text>().text = categoryNames[GetCategoryNumOffset() + 3];
         if (numCategories > 2)
-            GameObject.Find("CategoryCube2").GetComponentInChildren<Text>().text = categoryDirectory[GetCategoryNumOffset() + 2].Name;
+            GameObject.Find("CategoryCube2").GetComponentInChildren<Text>().text = categoryNames[GetCategoryNumOffset() + 2];
         if (numCategories > 1)
-            GameObject.Find("CategoryCube1").GetComponentInChildren<Text>().text = categoryDirectory[GetCategoryNumOffset() + 1].Name;
+            GameObject.Find("CategoryCube1").GetComponentInChildren<Text>().text = categoryNames[GetCategoryNumOffset() + 1];
         if (numCategories > 0)
-            GameObject.Find("CategoryCube0").GetComponentInChildren<Text>().text = categoryDirectory[GetCategoryNumOffset() + 0].Name;
+            GameObject.Find("CategoryCube0").GetComponentInChildren<Text>().text = categoryNames[GetCategoryNumOffset() + 0];
     }
 
     private int GetNumOfCategoriesInCurrentPage() {
-        return 4; //HARDCODED
+        return categoryNames.Length;
     }
 
     public void SpawnGameObject() {
         GameObject spawnedGameObject = new GameObject();
         spawnedGameObject = currentlyDisplayedMenuGameObject;
         spawnedGameObject.transform.parent = null;
+        DealWithCubes("MenuSpawnButton");
         GameObject.Find("DisplayAreaTitleText").GetComponent<Text>().text = "";
     }
 }

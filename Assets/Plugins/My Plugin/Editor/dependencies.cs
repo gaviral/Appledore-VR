@@ -25,13 +25,14 @@ using UnityEditor;
 [InitializeOnLoad]
 public class SampleDependencies : AssetPostprocessor {
 #if UNITY_ANDROID
-  /// <summary>Instance of the PlayServicesSupport resolver</summary>
-  public static object svcSupport;
+
+    /// <summary>Instance of the PlayServicesSupport resolver</summary>
+    public static object svcSupport;
+
 #endif  // UNITY_ANDROID
 
-  /// Initializes static members of the class.
-  static SampleDependencies() {
-
+    /// Initializes static members of the class.
+    static SampleDependencies() {
         //
         //
         // NOTE:
@@ -39,148 +40,144 @@ public class SampleDependencies : AssetPostprocessor {
         //       UNCOMMENT THIS CALL TO MAKE THE DEPENDENCIES BE REGISTERED.
         //   THIS FILE IS ONLY A SAMPLE!!
         //
-          RegisterDependencies();
+        RegisterDependencies();
         //
-  }
+    }
 
-
-  /// <summary>
-  /// Registers the dependencies needed by this plugin.
-  /// </summary>
-  public static void RegisterDependencies() {
+    /// <summary>
+    /// Registers the dependencies needed by this plugin.
+    /// </summary>
+    public static void RegisterDependencies() {
 #if UNITY_ANDROID
-    RegisterAndroidDependencies();
+        RegisterAndroidDependencies();
 #elif UNITY_IOS
     RegisterIOSDependencies();
 #endif
-  }
-
-  /// <summary>
-  /// Registers the android dependencies.
-  /// </summary>
-  public static void RegisterAndroidDependencies() {
-
-    // Setup the resolver using reflection as the module may not be
-    // available at compile time.
-    Type playServicesSupport = Google.VersionHandler.FindClass(
-      "Google.JarResolver", "Google.JarResolver.PlayServicesSupport");
-    if (playServicesSupport == null) {
-      return;
     }
-    svcSupport = svcSupport ?? Google.VersionHandler.InvokeStaticMethod(
-      playServicesSupport, "CreateInstance",
-      new object[] {
+
+    /// <summary>
+    /// Registers the android dependencies.
+    /// </summary>
+    public static void RegisterAndroidDependencies() {
+        // Setup the resolver using reflection as the module may not be
+        // available at compile time.
+        Type playServicesSupport = Google.VersionHandler.FindClass(
+          "Google.JarResolver", "Google.JarResolver.PlayServicesSupport");
+        if (playServicesSupport == null) {
+            return;
+        }
+        svcSupport = svcSupport ?? Google.VersionHandler.InvokeStaticMethod(
+          playServicesSupport, "CreateInstance",
+          new object[] {
           "GooglePlayGames",
           EditorPrefs.GetString("AndroidSdkRoot"),
           "ProjectSettings"
-      });
+          });
 
-    // For example to depend on play-services-games version 9.6.0  you need to specify the
-    // package, artifact, and version as well as the packageId from the SDK manager in case
-    // a newer version needs to be downloaded to build.
+        // For example to depend on play-services-games version 9.6.0  you need to specify the
+        // package, artifact, and version as well as the packageId from the SDK manager in case
+        // a newer version needs to be downloaded to build.
 
-    Google.VersionHandler.InvokeInstanceMethod(
-      svcSupport, "DependOn",
-      new object[] {
+        Google.VersionHandler.InvokeInstanceMethod(
+          svcSupport, "DependOn",
+          new object[] {
       "com.google.android.gms",
       "play-services-games",
       "9.6.0" },
-      namedArgs: new Dictionary<string, object>() {
+          namedArgs: new Dictionary<string, object>() {
           {"packageIds", new string[] { "extra-google-m2repository" } }
-      });
+          });
 
-    // This example gets the com.android.support.support-v4 library, version 23.1 or greater.
-    // notice it is in a different package  than the play-services libraries.
+        // This example gets the com.android.support.support-v4 library, version 23.1 or greater.
+        // notice it is in a different package  than the play-services libraries.
 
-    Google.VersionHandler.InvokeInstanceMethod(
-      svcSupport, "DependOn",
-      new object[] { "com.android.support", "support-v4", "23.1+" },
-      namedArgs: new Dictionary<string, object>() {
+        Google.VersionHandler.InvokeInstanceMethod(
+          svcSupport, "DependOn",
+          new object[] { "com.android.support", "support-v4", "23.1+" },
+          namedArgs: new Dictionary<string, object>() {
           {"packageIds", new string[] { "extra-android-m2repository" } }
-      });
+          });
 
-  // firebase
-  Google.VersionHandler.InvokeInstanceMethod(
-    svcSupport, "DependOn",
-      new object[] { "com.google.firebase", "firebase-database", "LATEST" },
-    namedArgs: new Dictionary<string, object>() {
+        // firebase
+        Google.VersionHandler.InvokeInstanceMethod(
+          svcSupport, "DependOn",
+            new object[] { "com.google.firebase", "firebase-database", "10.2.0" },
+          namedArgs: new Dictionary<string, object>() {
       {"packageIds", new string[] { "extra-android-m2repository" } }
-    });
+          });
 
-  Google.VersionHandler.InvokeInstanceMethod(
-    svcSupport, "DependOn",
-      new object[] { "com.google.firebase", "firebase-messaging", "LATEST" },
-    namedArgs: new Dictionary<string, object>() {
+        Google.VersionHandler.InvokeInstanceMethod(
+          svcSupport, "DependOn",
+            new object[] { "com.google.firebase", "firebase-messaging", "10.2.0" },
+          namedArgs: new Dictionary<string, object>() {
       {"packageIds", new string[] { "extra-android-m2repository" } }
-    });
+          });
 
-  Google.VersionHandler.InvokeInstanceMethod(
-    svcSupport, "DependOn",
-      new object[] { "com.google.firebase", "firebase-auth", "LATEST" },
-    namedArgs: new Dictionary<string, object>() {
+        Google.VersionHandler.InvokeInstanceMethod(
+          svcSupport, "DependOn",
+            new object[] { "com.google.firebase", "firebase-auth", "10.2.0" },
+          namedArgs: new Dictionary<string, object>() {
       {"packageIds", new string[] { "extra-android-m2repository" } }
-    });
-    
-  Google.VersionHandler.InvokeInstanceMethod(
-    svcSupport, "DependOn",
-      new object[] { "com.google.android.gms", "play-services-maps", "LATEST" },
-    namedArgs: new Dictionary<string, object>() {
+          });
+
+        Google.VersionHandler.InvokeInstanceMethod(
+          svcSupport, "DependOn",
+            new object[] { "com.google.android.gms", "play-services-maps", "10.2.0" },
+          namedArgs: new Dictionary<string, object>() {
       {"packageIds", new string[] { "extra-android-m2repository" } }
-    });
+          });
 
-  Google.VersionHandler.InvokeInstanceMethod(
-    svcSupport, "DependOn",
-    new object[] { "com.google.android.gms", "play-services-location", "LATEST" },
-    namedArgs: new Dictionary<string, object>() {
+        Google.VersionHandler.InvokeInstanceMethod(
+          svcSupport, "DependOn",
+          new object[] { "com.google.android.gms", "play-services-location", "10.2.0" },
+          namedArgs: new Dictionary<string, object>() {
       {"packageIds", new string[] { "extra-android-m2repository" } }
-    });
+          });
 
-  Google.VersionHandler.InvokeInstanceMethod(
-    svcSupport, "DependOn",
-    new object[] { "com.google.android.gms", "play-services-auth", "LATEST" },
-    namedArgs: new Dictionary<string, object>() {
+        Google.VersionHandler.InvokeInstanceMethod(
+          svcSupport, "DependOn",
+          new object[] { "com.google.android.gms", "play-services-auth", "10.2.0" },
+          namedArgs: new Dictionary<string, object>() {
       {"packageIds", new string[] { "extra-android-m2repository" } }
-    });
-  }
-
-  /// <summary>
-  /// Registers the IOS dependencies.
-  /// </summary>
-  public static void RegisterIOSDependencies() {
-
-    // Setup the resolver using reflection as the module may not be
-    // available at compile time.
-    Type iosResolver = Google.VersionHandler.FindClass(
-        "Google.IOSResolver", "Google.IOSResolver");
-    if (iosResolver == null) {
-      return;
+          });
     }
 
-    // Dependencies for iOS are added by referring to CocoaPods.  The libraries and frameworkds are
-    //  and added to the Unity project, so they will automatically be included.
-    //
-    // This example add the GooglePlayGames pod, version 5.0 or greater, disabling bitcode generation.
+    /// <summary>
+    /// Registers the IOS dependencies.
+    /// </summary>
+    public static void RegisterIOSDependencies() {
+        // Setup the resolver using reflection as the module may not be
+        // available at compile time.
+        Type iosResolver = Google.VersionHandler.FindClass(
+            "Google.IOSResolver", "Google.IOSResolver");
+        if (iosResolver == null) {
+            return;
+        }
 
-    Google.VersionHandler.InvokeStaticMethod(
-      iosResolver, "AddPod",
-      new object[] { "GooglePlayGames" },
-      namedArgs: new Dictionary<string, object>() {
+        // Dependencies for iOS are added by referring to CocoaPods.  The libraries and frameworkds are
+        //  and added to the Unity project, so they will automatically be included.
+        //
+        // This example add the GooglePlayGames pod, version 5.0 or greater, disabling bitcode generation.
+
+        Google.VersionHandler.InvokeStaticMethod(
+          iosResolver, "AddPod",
+          new object[] { "GooglePlayGames" },
+          namedArgs: new Dictionary<string, object>() {
           { "version", "5.0+" },
           { "bitcodeEnabled", false },
-      });
-  }
-
-  // Handle delayed loading of the dependency resolvers.
-  private static void OnPostprocessAllAssets(
-      string[] importedAssets, string[] deletedAssets,
-      string[] movedAssets, string[] movedFromPath) {
-    foreach (string asset in importedAssets) {
-      if (asset.Contains("IOSResolver") ||
-        asset.Contains("JarResolver")) {
-        RegisterDependencies();
-        break;
-      }
+          });
     }
-  }
-}
 
+    // Handle delayed loading of the dependency resolvers.
+    private static void OnPostprocessAllAssets(
+        string[] importedAssets, string[] deletedAssets,
+        string[] movedAssets, string[] movedFromPath) {
+        foreach (string asset in importedAssets) {
+            if (asset.Contains("IOSResolver") ||
+              asset.Contains("JarResolver")) {
+                RegisterDependencies();
+                break;
+            }
+        }
+    }
+}
