@@ -7,6 +7,7 @@ Assets/*/
 !Assets/Scripts/
 !Assets/Plugins/
 !Assets/Plugins/My Plugin/Editor
+!Assets/Resources/
 Assets/Plugins/Android
 Assets/Plugins/iOS
 Assets/Plugins/x86
