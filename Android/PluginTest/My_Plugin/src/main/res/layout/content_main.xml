@@ -18,7 +18,7 @@
         android:id="@+id/unitybutton"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/memcastle"
+        android:drawableStart="@drawable/ic_unity"
         android:layout_marginTop="39dp"
         android:fontFamily="sans-serif"
         android:padding="16dp"
