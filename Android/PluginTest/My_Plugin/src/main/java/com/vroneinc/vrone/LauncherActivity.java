@@ -14,8 +14,8 @@ public class LauncherActivity extends Activity {
 
         Window window = this.getWindow();
 
-        Intent intent = new Intent(this, MainActivity.class);
-        //Intent intent = new Intent(this, SignInActivity.class);
+        //Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
         finish();
     }

@@ -115,6 +115,7 @@ public class MnemonicsMenu : MonoBehaviour {
         //Debug.Log(Resources.LoadAll("/Menu/Animals/"));
         //Debug.Log(curObject);
         currentlyDisplayedMenuGameObject = Instantiate(curObject, this.gameObject.transform.GetChild(0).transform) as GameObject;
+        currentlyDisplayedMenuGameObject.transform.localPosition = new Vector3(0, 0, 0);
         currentTypeName = currentCategoryObjects[curMnemonicNum].name;//TODO: gameStateIntegrate
     }
 
