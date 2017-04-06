@@ -92,6 +92,7 @@ public class MnemonicsMenu : MonoBehaviour {
         //Object object1 = Resources.Load("Menu/Animals/Elephant");
         Debug.Log("Cube #" + categoryCubeNum.ToString() + " was clicked");
         ClearDisplayArea();
+        curMnemonicNum = 0;
         curCategoryNum = categoryCubeNum;
         curCategoryName = categoryNames[GetCategoryNumOffset() + categoryCubeNum];
         Debug.Log(curCategoryName);
