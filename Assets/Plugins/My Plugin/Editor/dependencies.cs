@@ -105,6 +105,13 @@ public class SampleDependencies : AssetPostprocessor {
           namedArgs: new Dictionary<string, object>() {
       {"packageIds", new string[] { "extra-android-m2repository" } }
           });
+		  
+		Google.VersionHandler.InvokeInstanceMethod(
+          svcSupport, "DependOn",
+            new object[] { "com.google.firebase", "firebase-storage", "10.2.0" },
+          namedArgs: new Dictionary<string, object>() {
+      {"packageIds", new string[] { "extra-android-m2repository" } }
+          });
 
         Google.VersionHandler.InvokeInstanceMethod(
           svcSupport, "DependOn",
