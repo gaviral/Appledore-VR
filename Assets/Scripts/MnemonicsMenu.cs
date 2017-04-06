@@ -244,7 +244,8 @@ public class MnemonicsMenu : MonoBehaviour {
         GameObject spawnedGameObject = new GameObject();
         spawnedGameObject = currentlyDisplayedMenuGameObject;
         spawnedGameObject.transform.parent = null;
-        DealWithCubes("MenuSpawnButton");
+         spawnedGameObject.AddComponent<ObjectDestroyer>();
+         DealWithCubes("MenuSpawnButton");
         GameObject.Find("DisplayAreaTitleText").GetComponent<Text>().text = "";
         ObjectSpawner spawner = GameObject.Find("Player").GetComponent<ObjectSpawner>();
         spawner.addMnemonicFromMenu(currentTypeName, spawnedGameObject);

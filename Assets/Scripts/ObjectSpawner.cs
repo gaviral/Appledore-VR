@@ -54,11 +54,11 @@ public class ObjectSpawner : MonoBehaviour {
     }
 
     private void Awake() {
-        mainClass = new AndroidJavaClass("com.vroneinc.vrone.PalaceSelectionActivity");
-        userID = mainClass.CallStatic<string>("getCurUserId");
-        palaceUserID = mainClass.CallStatic<string>("getCurPalaceUserId");
-        //userID = "OfGU9MONj7PiIinOJWUVbknfIpE2";
-        //palaceUserID = "jnPhEjWfVEMI68T0tITXnZnerc92";
+       // mainClass = new AndroidJavaClass("com.vroneinc.vrone.PalaceSelectionActivity");
+        //userID = mainClass.CallStatic<string>("getCurUserId");
+        //palaceUserID = mainClass.CallStatic<string>("getCurPalaceUserId");
+        userID = "OfGU9MONj7PiIinOJWUVbknfIpE2";
+        palaceUserID = "jnPhEjWfVEMI68T0tITXnZnerc92";
 
         placeMnemonicMode = true;
         //mnemonicDict = new Dictionary<string, GameObject>();
@@ -206,8 +206,11 @@ public class ObjectSpawner : MonoBehaviour {
             Debug.Log("Couldn't find mnemonic object of typeid: " + typeName);
         } else {
             if (!uidSet.Contains(uid)) {
-                GameObject spawn = (GameObject)Instantiate(mnemonic, position, Quaternion.Euler(rotation)) as GameObject;
-                uniqueSpawn = new UniqueGameObject(spawn, uid, palaceUserID, typeName);
+                  GameObject spawn = (GameObject)Instantiate(mnemonic, position, Quaternion.Euler(rotation)) as GameObject;
+
+                  spawn.AddComponent<ObjectDestroyer>();
+
+                  uniqueSpawn = new UniqueGameObject(spawn, uid, palaceUserID, typeName);
                 spawnedObjects.Add(uniqueSpawn);
 
                 //for when objects are loaded at start of game
