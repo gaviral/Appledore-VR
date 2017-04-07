@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:animateLayoutChanges="true"
+    tools:context="com.vroneinc.vrone.MainActivity">
+
+    <Button
+        android:id="@+id/createTopicButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/topicListView"
+        android:enabled="false"
+        android:layout_alignParentEnd="true"
+        android:text="@string/create_new_post"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/categoryListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_category"/>
+
+    <ListView
+        android:id="@+id/topicListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/createTopicButton"
+        android:visibility="gone"
+        android:paddingTop="10dp"
+        tools:listitem="@layout/item_topic"/>
+
+    <TextView
+        android:id="@+id/empty"
+        android:text="@string/empty_topics_text"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:visibility="gone" />
+
+</RelativeLayout>

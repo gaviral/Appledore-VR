@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="@dimen/activity_horizontal_margin"
+              android:layout_marginStart="@dimen/activity_horizontal_margin"
+              android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/userPic"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="3dp"
+        android:paddingTop="4dp" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/userPic"
+        android:paddingLeft="6dp"
+        android:paddingRight="5dp"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:textStyle="bold"
+        android:textColor="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/userName"
+        android:layout_alignParentRight="true"
+        android:paddingRight="9dp"
+        android:paddingBottom="1dp"
+        android:textSize="10sp"
+        android:textAppearance="?android:attr/textAppearanceListItem" />
+
+    <TextView
+        android:id="@+id/post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timestamp"
+        android:layout_toRightOf="@id/userPic"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="3dp"
+        android:textAppearance="?android:attr/textAppearanceListItem" />
+
+</RelativeLayout>

@@ -1,0 +1,103 @@
+{
+  "project_info": {
+    "project_number": "620672971561",
+    "firebase_url": "https://vr-one-4e3bb.firebaseio.com",
+    "project_id": "vr-one-4e3bb",
+    "storage_bucket": "vr-one-4e3bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620672971561:android:eb58700993a62ac5",
+        "android_client_info": {
+          "package_name": "com.vroneinc.vrone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620672971561-tj93rnkdn624j664kdifpnmsqnfraj04.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "83670b45d3c84c1eef65261ead96eb3b2505bf69"
+          }
+        },
+        {
+          "client_id": "620672971561-nku2cutkpnng92jqs0rirr1efo5bn1q7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "8318bf36984bc58cb4e3f10104e7eff67a820900"
+          }
+        },
+        {
+          "client_id": "620672971561-s69f1vcp1ci6a98n88stnuv0t83pj78d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "b952e43a8f4ad677409397c1e53eea64c7935665"
+          }
+        },
+        {
+          "client_id": "620672971561-cp0f540fgjf2f7cnnipoareb247q1tk8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "b8f5949e9ab81499bea0f8036cc08307cb91ee64"
+          }
+        },
+        {
+          "client_id": "620672971561-bd9624fghh3drunmhjh9ekeji247pf7s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "0e71ca46d0e454f25f60dc10a80ead6362d17c9b"
+          }
+        },
+        {
+          "client_id": "620672971561-bl5mq25b91nntd7hk2n9ru2kpa7st1a5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "86c48a36c2ba895f280761b9d55fd3fde96a138d"
+          }
+        },
+        {
+          "client_id": "620672971561-e9210rt86q6vfmon5de93oher63k5vq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vroneinc.vrone",
+            "certificate_hash": "c39741e831c74de8c64724ac09eb0110a3b29512"
+          }
+        },
+        {
+          "client_id": "620672971561-g9j75ssofqot6ad6b6f79h5vp1jbojvj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNl9xcd_PaAwcnBuPPnQlxkUbAh6RsBHc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620672971561-g9j75ssofqot6ad6b6f79h5vp1jbojvj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

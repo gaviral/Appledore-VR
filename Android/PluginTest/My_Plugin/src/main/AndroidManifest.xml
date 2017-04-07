@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.vroneinc.vrone">
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="23" />
+
+    <permission
+        android:name="com.example.mapdemo.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/vrone_logo_temp_tp"
+        android:label="VR-One"
+        android:supportsRtl="true">
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBNl9xcd_PaAwcnBuPPnQlxkUbAh6RsBHc" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".MainActivity"
+            android:theme="@android:style/Theme.Material.Light"/>
+        <activity
+            android:name=".LauncherActivity"
+            android:theme="@style/LauncherTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".GameActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".TopicActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Material.Light" />
+        <activity android:name=".MapActivity" />
+        <activity
+            android:name=".ForumActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Material.Light" />
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".AuthBaseActivity" />
+        <activity
+            android:name=".PalaceSelectionActivity"
+            android:theme="@android:style/Theme.Material.Light" />
+    </application>
+
+</manifest>
