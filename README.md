@@ -19,3 +19,6 @@ Combining the power of VR and mind palace to further advance learning techniques
 
 ***Note:*** Due to GitHub's 100 MB limitation on file sizes, the hardware folder including the C source code is divided into 2 .rar files. After downloading the files, please extract VR-One_DE2.part1.rar.
 
+
+AppledoreVR Video Link: https://youtu.be/xYu2ffnQrPE
+
