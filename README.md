@@ -1,5 +1,6 @@
 # VR-One
 Combining the power of VR and mind palace to further advance learning techniques.
+https://vr-one-4e3bb.firebaseapp.com/
 
 **Project Structure:**
 
@@ -20,5 +21,10 @@ Combining the power of VR and mind palace to further advance learning techniques
 ***Note:*** Due to GitHub's 100 MB limitation on file sizes, the hardware folder including the C source code is divided into 2 .rar files. After downloading the files, please extract VR-One_DE2.part1.rar.
 
 
-AppledoreVR Video Link: https://youtu.be/xYu2ffnQrPE
+**Help taken from the following sources:**
+* Udacity
+* Google
+* Unity Asset store (refer to list of assets in Github Wikis section)
 
+
+AppledoreVR (VR-One) Video Link: https://youtu.be/xYu2ffnQrPE
